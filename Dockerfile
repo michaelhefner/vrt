@@ -11,6 +11,7 @@ RUN apt-get install -y gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libc
 RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 RUN dpkg -i google-chrome*.deb
 RUN npm install
+# RUN npm audit fix --force
 
 COPY . ./
 EXPOSE $PORT

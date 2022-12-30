@@ -1,6 +1,7 @@
 const backstop = require("backstopjs");
 const config = require("../../default.json");
 const fs = require('fs');
+const path = require('path');
 
 function backstopInit(data) {
     return backstop('init', {data});
@@ -25,14 +26,15 @@ function backstopReference(req) {
 
     const filename = `snapshots/${trimmedFileName}`;
     config.paths = {
-        "bitmaps_reference": `${filename}/backstop_data/bitmaps_reference`,
-        "bitmaps_test": `${filename}/backstop_data/bitmaps_test`,
-        "engine_scripts": `${filename}/backstop_data/engine_scripts`,
-        "html_report": `${filename}/backstop_data/html_report`,
-        "ci_report": `${filename}/backstop_data/ci_report`
+        "bitmaps_reference": path.join(__dirname, `../../${filename}/backstop_data/bitmaps_reference`),
+        "bitmaps_test": path.join(__dirname, `../../${filename}/backstop_data/bitmaps_test`),
+        "engine_scripts": path.join(__dirname, `../../${filename}/backstop_data/engine_scripts`),
+        "html_report": path.join(__dirname, `../../${filename}/backstop_data/html_report`),
+        "ci_report": path.join(__dirname, `../../${filename}/backstop_data/ci_report`)
     };
     console.log('save backstop json', `${filename}/backstop.json`)
-    fs.writeFile(`${filename}/backstop.json`, JSON.stringify(config), (err, res)=>{
+    fs.existsSync(filename) || fs.mkdirSync(filename);
+    fs.writeFile(path.join(__dirname, `../../${filename}/backstop.json`), JSON.stringify(config), (err, res)=>{
         console.log('error', err, 'result', res);
     })
     backstop("reference", {config: config}).then(()=>backstop("test", {config: config}))

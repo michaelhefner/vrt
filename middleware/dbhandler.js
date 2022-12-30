@@ -4,10 +4,15 @@ const createUserTable = pool.query(`create table if not exists "APITester".users
   username varchar(255) not null, email varchar(255) not null, unique(username, email))`)
     .then(res => console.log('create users table if it does not exist',res));
 
-const createTestTable = pool.query(`create table if not exists "APITester".test (id serial primary key, 
-  name varchar(255) not null, description varchar(255), method varchar(255), body varchar(255), headers varchar(255), 
-  status varchar(255), userid integer not null REFERENCES "APITester".users(id), url varchar(255), unique(name));`)
-    .then(res => console.log('create test table if it does not exist', res));
+    const createTestTable = pool.query(`create table if not exists "APITester".test (id serial primary key, 
+      name varchar(255) not null, description varchar(255), method varchar(255), body varchar(255), headers varchar(255), 
+      status varchar(255), userid integer not null REFERENCES "APITester".users(id), url varchar(255), unique(name));`)
+        .then(res => console.log('create test table if it does not exist', res));
+
+        const createVRT = pool.query(`create table if not exists "VRT".test (id serial primary key, 
+          name varchar(255) not null, description varchar(255), method varchar(255), body varchar(255), headers varchar(255), 
+          status varchar(255), userid integer not null REFERENCES "APITester".users(id), url varchar(255), unique(name));`)
+            .then(res => console.log('create test table if it does not exist', res));
 
 
 const data = createUserTable;
