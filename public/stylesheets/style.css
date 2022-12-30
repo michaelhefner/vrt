@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500&display=swap');
+* {
+  font-family: 'Roboto', sans-serif;
+}
+main {
+  padding: 2rem;
+}
+body {
+  padding: 0;
+  margin: 0;
+}
+.form-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+form {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  padding: 1rem;
+  width: 80%;
+  /*margin: 0 4rem 0 auto;*/
+}
+
+form label {
+  z-index: 1;
+  margin: 1rem 0 0 5px;
+  color: #0009;
+  font-weight: bold;
+}
+
+form input {
+  margin-top: -1.25rem;
+  margin-bottom: 1rem;
+  background: white;
+  border: solid 1px #0002;
+  padding: 1.5rem 1rem .25rem;
+  transition: all 500ms ease-in-out;
+}
+form input:focus {
+  margin-top: 0;
+  padding: .25rem;
+}
+form button {
+  margin-left: auto;
+  border: none;
+  background-color: darkslategray;
+  color: white;
+  padding: .5rem 2rem;
+  border-radius: .2rem;
+  cursor: pointer;
+  transition: background-color 600ms ease-in-out;
+}
+form button:hover {
+  background: whitesmoke;
+  color: darkslategray;
+}
+
+form .input-container {
+  display: flex;
+  flex-direction: column;
+  border: solid 1px #0002;
+  padding: 0 .5rem;
+  margin: .5rem .25rem;
+  background-color: #efefef44;
+}
+
+form .id {
+  min-width: 300px;
+  flex: 1;
+}
+form .fold {
+  height: 0;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: all 500ms ease-in-out;
+}
+form .viewport-list,
+form .viewports,
+form .scenario{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+form  h4 {
+  width: 100%;
+  cursor: pointer;
+}
+form .viewport-list .viewport,
+form .viewports .viewport,
+form .scenario .input {
+  min-width: 25%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border: solid 1px #0002;
+  background-color: #eee6;
+  padding: .5rem;
+  margin: .5rem;
+}
+form .urlinfo {
+  min-width: 70%;
+}
+
+    /************************
+    nav
+    /************************/
+nav {
+  display: flex;
+  flex-direction: row;
+  background: whitesmoke;
+  align-items: center;
+  padding: .5rem;
+}
+nav h1 {
+  margin: 0;
+  padding: 0 1rem;
+}
+
+nav ul {
+  display: flex;
+  width: 80%;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin: 0;
+  padding: 0;
+}
+nav ul li {
+  list-style: none;
+  margin: .5rem 1rem;
+}
+nav ul li a{
+  text-decoration: none;
+  padding: .5rem 1rem;
+  background: darkblue;
+  border-radius: .25rem;
+  color: white;
+  transition: all 600ms ease-in-out;
+}
+nav ul li a:hover {
+  color: darkblue;
+  background: whitesmoke;
+}
+
+@media screen and (max-width: 769px){
+  nav, nav ul {
+    flex-direction: column;
+  }
+  nav ul li a {
+    display: block;
+    text-align: center;
+  }
+}

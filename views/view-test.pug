@@ -1,0 +1,21 @@
+extends layout
+
+block content
+    h3 Saved Reports
+    table
+        tbody
+            tr
+                th
+                    | Test
+                th
+                    | Edit
+                th
+                    | Delete
+            each link in links
+                tr
+                    td
+                        a(href= link.href)= link.name.replaceAll('_', '/')
+                    td
+                        a(href='/vrt/run-test/'+link.name style='margin-left:1rem') Edit
+                    td
+                        a(href='/vrt/run-test/'+link.name style='margin-left:1rem') Delete

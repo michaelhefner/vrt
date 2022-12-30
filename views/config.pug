@@ -1,0 +1,93 @@
+extends layout
+
+block content
+    section.form-container
+        h3 Enter Your URL's Here
+        form(method='POST' action='/vrt/run-test')
+            div.input-container.id
+                h4 Test ID
+                label(for='id') ID
+                input(type='text' name='id' value= config.id id='id')
+            div.input-container.urlinfo
+                h4 URL Information
+                each scenario in config.scenarios
+                    label(for='referenceUrl') Reference URL
+                    input(type='text' name='referenceUrl' id='referenceUrl' value= scenario.referenceUrl)
+
+                each scenario in config.scenarios
+                    label(for='testUrl') Test URL
+                    input(type='text' name='testUrl' id='testUrl' value= scenario.url)
+            div.input-container.viewports
+                h4 Viewports
+                .fold
+                    .viewport-list
+                        each val in config.viewports
+                            div.viewport
+                                label(for='viewportLabel') Label
+                                input(type='text' name='viewportLabel' value= val.label id='viewportLabel')
+                                label(for='viewportWidth') Width
+                                input(type='text' name='viewportWidth' value= val.width id='viewportWidth')
+                                label(for='viewportHeight') Height
+                                input(type='text' name='viewportHeight' value= val.height id='viewportHeight')
+            div.input-container.scenario
+                h4 Additional Config Options
+                .fold
+                    each scenerio in config.scenarios
+                        div.input
+                            label(for='scenario-delay') Delay
+                            input(type='text' name='scenario-delay' value= scenerio.delay id='scenario-delay')
+                        div.input
+                            label(for='scenario-readyEvent') Ready Event
+                            input(type='text' name='scenario-readyEvent' value= scenerio.readyEvent id='scenario-readyEvent')
+                        div.input
+                            label(for='scenario-readySelector') Ready Selector
+                            input(type='text' name='scenario-readySelector' value= scenerio.readySelector id='scenario-readySelector')
+                        div.input
+                            label(for='scenario-hideSelector') Hide Selector
+                            input(type='text' name='scenario-hideSelector' value= scenerio.hideSelector id='scenario-hideSelector')
+                        div.input
+                            label(for='scenario-removeSelector') Remove Selector
+                            input(type='text' name='scenario-removeSelector' value= scenerio.removeSelector id='scenario-removeSelector')
+                        div.input
+                            label(for='scenario-hoverSelector') Hover Selector
+                            input(type='text' name='scenario-hoverSelector' value= scenerio.hoverSelector id='scenario-hoverSelector')
+                        div.input
+                            label(for='scenario-clickSelector') Click Selector
+                            input(type='text' name='scenario-clickSelector' value= scenerio.hoverSelector id='scenario-clickSelector')
+                        div.input
+                            label(for='scenario-postInteractionWait') Post Interaction Wait
+                            input(type='text' name='scenario-postInteractionWait' value= scenerio.postInteractionWait id='scenario-postInteractionWait')
+                        each selector in scenerio.selectors
+                            div.input
+                                label(for='selector-selectorExpansion') Selector Expansion
+                                input(type='text' name='selector-selectorExpansion' value= selector.selectorExpansion id='selector-selectorExpansion')
+                            div.input
+                                label(for='selector-expect') Expect
+                                input(type='text' name='selector-expect' value= selector.expect id='selector-expect')
+                            div.input
+                                label(for='selector-misMatchThreshold') Mis Match Threshold
+                                input(type='text' name='selector-misMatchThreshold' value= selector.misMatchThreshold id='selector-misMatchThreshold')
+                            div.input
+                                label(for='selector-requireSameDimensions') Require Same Dimensions
+                                input(type='text' name='selector-requireSameDimensions' value= selector.requireSameDimensions id='selector-requireSameDimensions')
+            button(type='submit') Run
+
+
+            //"paths": {
+            //"bitmaps_reference": "backstop_data/bitmaps_reference",
+            //"bitmaps_test": "backstop_data/bitmaps_test",
+            //"engine_scripts": "backstop_data/engine_scripts",
+            //"html_report": "backstop_data/html_report",
+            //"ci_report": "backstop_data/ci_report"
+            //},
+            //"report": ["browser"],
+            //"engine": "puppeteer",
+            //"engineOptions": {
+            //"args": ["--no-sandbox"]
+            //},
+            //"asyncCaptureLimit": 10,
+            //"asyncCompareLimit": 50,
+            //"debug": true,
+            //"debugWindow": false
+            //}
+            //

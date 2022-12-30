@@ -1,0 +1,17 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/vrt/stylesheets/style.css')
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+  body
+    include navbar
+    main
+      if user
+        p Hey &nbsp;
+          strong #{user.nickname},
+        p Welcome to #{title}!
+      else
+        p Welcome, ready to login?
+
+      block content

@@ -1,0 +1,42 @@
+const backstop = require("backstopjs");
+const config = require("../../default.json");
+const fs = require('fs');
+
+function backstopInit(data) {
+    return backstop('init', {data});
+}
+
+function backstopReference(req) {
+    const trimmedFileName = (req.body.testUrl.slice(req.body.testUrl.indexOf('://') + 3, req.body.testUrl.length)).replaceAll('/', '_');
+    config.id = req.body.id;
+    config.scenarios[0].label = req.body.id;
+    config.scenarios[0].referenceUrl = req.body.referenceUrl
+    config.scenarios[0].url = req.body.testUrl
+    config.scenarios[0].viewportLabel = req.body.viewportLabel
+    config.scenarios[0].viewportWidth = req.body.viewportWidth
+    config.scenarios[0].delay = req.body['scenario-delay']
+    config.scenarios[0].readyEvent = req.body['scenario-readyEvent']
+    config.scenarios[0].readySelector = req.body['scenario-readySelector']
+    config.scenarios[0].hideSelector = req.body['scenario-hideSelector']
+    config.scenarios[0].removeSelector = req.body['scenario-removeSelector']
+    config.scenarios[0].hoverSelector = req.body['scenario-hoverSelector']
+    config.scenarios[0].clickSelector = req.body['scenario-clickSelector']
+    config.scenarios[0].postInteractionWait = req.body['scenario-postInteractionWait']
+
+    const filename = `snapshots/${trimmedFileName}`;
+    config.paths = {
+        "bitmaps_reference": `${filename}/backstop_data/bitmaps_reference`,
+        "bitmaps_test": `${filename}/backstop_data/bitmaps_test`,
+        "engine_scripts": `${filename}/backstop_data/engine_scripts`,
+        "html_report": `${filename}/backstop_data/html_report`,
+        "ci_report": `${filename}/backstop_data/ci_report`
+    };
+    console.log('save backstop json', `${filename}/backstop.json`)
+    fs.writeFile(`${filename}/backstop.json`, JSON.stringify(config), (err, res)=>{
+        console.log('error', err, 'result', res);
+    })
+    backstop("reference", {config: config}).then(()=>backstop("test", {config: config}))
+}
+
+
+exports.backstopReference = backstopReference;

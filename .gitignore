@@ -1,0 +1,12 @@
+*/.env
+.env
+node_modules
+.idea
+hefdev_com.ca-bundle
+hefdev_com.crt
+hefdev_com.p7b
+backstop_data
+backstop_data/*
+ssl/michaelhefner_com.pfx
+ssl
+snapshots
