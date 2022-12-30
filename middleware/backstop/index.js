@@ -8,6 +8,7 @@ function backstopInit(data) {
 }
 
 function backstopReference(req) {
+    console.log('urls', req.body.testUrl, req.body.referenceUrl, 'delay', req.body['scenario-delay']);
     const trimmedFileName = (req.body.testUrl.slice(req.body.testUrl.indexOf('://') + 3, req.body.testUrl.length)).replaceAll('/', '_');
     config.id = req.body.id;
     config.scenarios[0].label = req.body.id;
