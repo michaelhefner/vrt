@@ -33,7 +33,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/vrt/', express.static(path.join(__dirname, 'public')));
+app.use('/', express.static(path.join(__dirname, 'public')));
 app.set('trust proxy', 1) // trust first proxy
 app.use(session({
   secret: process.env.session_secret,
@@ -41,9 +41,9 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: true }
 }))
-app.use('/vrt/report', express.static(path.join(__dirname, 'snapshots/')));
+app.use('/report', express.static(path.join(__dirname, 'snapshots/')));
 
-app.use('/vrt', indexRouter);
+app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

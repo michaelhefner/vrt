@@ -34,7 +34,7 @@ router.get("/run-test/:id", requiresAuth(), function(req, res, next) {
 });
 router.post("/run-test", requiresAuth(), function(req, res, next) {
     backstop.backstopReference(req);
-    res.redirect( '/vrt/view-test');
+    res.redirect( '/view-test');
 });
 
 // router.get("/login",  (req, res) => {
@@ -66,7 +66,7 @@ router.get("/view-test", requiresAuth(), (req, res) => {
 });
 
 router.get('/report/:id', requiresAuth(), (req, res, next) => {
-    res.redirect(`/vrt/report/${req.params.id}/backstop_data/html_report/test-index`)
+    res.redirect(`/report/${req.params.id}/backstop_data/html_report/test-index`)
 })
 
 router.get("/report/*/backstop_data/html_report/test-index",requiresAuth(), function(req, res, next) {
