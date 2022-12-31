@@ -8,7 +8,8 @@ const path = require('path')
 
 
 router.get("/", function(req, res, next) {
-    fs.writeFileSync(path.join(__dirname, '../snapshots/default.json'), JSON.stringify(config, null, 2));
+    // fs.mkdir(path.join(__dirname, '../snapshots'),(res)=>console.log(res));
+    // fs.writeFileSync(path.join(__dirname, '../snapshots/default.json'), JSON.stringify(config, null, 2));
     res.render("index", {
         title: "Regression Testing",
         user: req.oidc.user,

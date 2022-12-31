@@ -14,6 +14,6 @@ RUN dpkg -i google-chrome*.deb
 
 COPY . ./
 RUN npm install
-
+RUN npm install pm2@latest -g
 EXPOSE $PORT
-ENTRYPOINT ["npm", "start"]
+ENTRYPOINT ["pm2", "start", "./bin/www", "--name", "vrt"]
