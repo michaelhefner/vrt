@@ -36,6 +36,8 @@ router.get("/run-test/:id", requiresAuth(), function(req, res, next) {
 });
 router.post("/run-test", requiresAuth(), function(req, res, next) {
     backstop.backstopReference(req, res);
+    res.redirect( '/view-test');
+
 });
 
 // router.get("/login",  (req, res) => {
