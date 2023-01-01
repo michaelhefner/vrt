@@ -7,7 +7,15 @@ function backstopInit(data) {
     return backstop('init', {data});
 }
 
-function backstopReference(req) {
+function backstopReference(req,res) {
+
+    res.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive'
+    });
+    
+
     console.log('urls', req.body.testUrl, req.body.referenceUrl, 'delay', req.body['scenario-delay']);
     const trimmedFileName = (req.body.testUrl.slice(req.body.testUrl.indexOf('://') + 3, req.body.testUrl.length)).replaceAll('/', '_');
     config.id = req.body.id;
@@ -26,6 +34,8 @@ function backstopReference(req) {
     config.scenarios[0].postInteractionWait = req.body['scenario-postInteractionWait']
 
     const filename = `snapshots/${trimmedFileName}`;
+    fs.rmSync(path.join(__dirname, `../../${filename}`), { recursive: true, force: true });
+
     config.paths = {
         "bitmaps_reference": path.join(__dirname, `../../${filename}/backstop_data/bitmaps_reference`),
         "bitmaps_test": path.join(__dirname, `../../${filename}/backstop_data/bitmaps_test`),
@@ -38,7 +48,15 @@ function backstopReference(req) {
     fs.writeFile(path.join(__dirname, `../../${filename}/backstop.json`), JSON.stringify(config), (err, res)=>{
         console.log('error', err, 'result', res);
     })
-    backstop("reference", {config: config}).then(()=>backstop("test", {config: config}))
+    backstop("reference", {config: config}).then(()=>backstop("test", {config: config}).then(()=>{
+
+    // close
+    res.on('close', () => {
+        clearInterval(interval);
+    res.redirect( '/view-test');
+
+    });
+    }))
 }
 
 

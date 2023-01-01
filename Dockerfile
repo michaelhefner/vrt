@@ -1,7 +1,7 @@
 FROM bitnami/node:latest
 LABEL author="Michael Hefner"
 ENV NODE_ENV=production
-ENV PORT=3000
+ENV PORT=8080
 WORKDIR /var/www/vrt
 COPY package-lock.json package.json ./
 RUN apt-get update
@@ -14,6 +14,7 @@ RUN dpkg -i google-chrome*.deb
 
 COPY . ./
 RUN npm install
-RUN npm install pm2@latest -g
+# RUN npm install pm2@latest -g
 EXPOSE $PORT
-ENTRYPOINT ["pm2", "start", "./bin/www", "--name", "vrt"]
+ENTRYPOINT ["node", "./bin/www"]
+# ENTRYPOINT ["pm2", "start", "./bin/www", "--name", "vrt"]
