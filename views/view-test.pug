@@ -2,20 +2,19 @@ extends layout
 
 block content
     h3 Saved Reports
-    table
-        tbody
-            tr
-                th
-                    | Test
-                th
-                    | Edit
-                th
-                    | Delete
-            each link in links
-                tr
-                    td
-                        a(href= link.href)= link.name.replaceAll('_', '/')
-                    td
-                        a(href='/run-test/'+link.name style='margin-left:1rem') Edit
-                    td
-                        a(href='/run-test/'+link.name style='margin-left:1rem') Delete
+
+    
+    section.grid
+        p.gr-row
+            | Test
+        p.gr-row
+            | Edit
+        p.gr-row
+            | Delete
+    each link in links
+        section.view-pg-link.grid
+            a.gr-row(href= link.href)= link.name.replaceAll('_', '/')
+            p.gr-row
+                a.edit.btn(href='/run-test/'+link.name style='margin-left:1rem') Edit
+            p.gr-row
+                a.delete.btn(href='/delete/'+link.name style='margin-left:1rem') Delete

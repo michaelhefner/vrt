@@ -40,9 +40,12 @@ router.post("/run-test", requiresAuth(), function(req, res, next) {
 
 });
 
-// router.get("/login",  (req, res) => {
-//     res.send(req.oidc.isAuthenticated() ? "Logged in" : "Logged out");
-// });
+router.get("/delete/:id", requiresAuth(), (req, res) => {
+    const parentDir = req.params.id.indexOf('/') > -1 ? req.params.id.slice(0, req.params.id.indexOf('/')).replace('_', '/') : req.params.id.replace('_', '/');
+    console.log("delete: ", parentDir),
+    fs.rmSync(path.join(__dirname, `../../${parentDir}`), { recursive: true, force: true });
+    res.send(req.oidc.isAuthenticated() ? "Logged in" : "Logged out");
+});
 router.get("/view-test", requiresAuth(), (req, res) => {
     fs.readdir(path.join(__dirname, '../snapshots'), (err, files) =>{
         if (files) {

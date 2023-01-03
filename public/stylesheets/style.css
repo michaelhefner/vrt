@@ -155,3 +155,36 @@ nav ul li a:hover {
     text-align: center;
   }
 }
+
+.grid {
+  display: grid;
+  grid-template-columns: 70% auto auto;
+
+}
+.gr-row {
+  padding: 1rem 0;
+  margin: 0;
+}
+.grid:nth-child(odd) {
+  background-color: #eee;
+}
+.btn {
+  padding: .5rem 1rem; 
+  border-radius: 3px;
+  text-decoration: none;
+  color: white;
+  transition: all 300ms ease-in-out;
+}
+.btn:hover {
+  background-color: white;
+  color: black;
+}
+.edit {
+  background-color: green;
+}
+.delete {
+  background-color: #900;
+}
+.view-pg-link:hover {
+  background-color: #0002;
+}
