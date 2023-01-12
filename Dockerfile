@@ -3,6 +3,7 @@ LABEL author="Michael Hefner"
 ENV NODE_ENV=production
 ENV PORT=8080
 WORKDIR /var/www/vrt
+RUN mkdir snapshot
 COPY package-lock.json package.json ./
 RUN apt-get update
 # RUN npm install -g npm@9.2.0
