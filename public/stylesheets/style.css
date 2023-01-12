@@ -115,6 +115,7 @@ nav {
   background: whitesmoke;
   align-items: center;
   padding: .5rem;
+  width: 99%;
 }
 nav h1 {
   margin: 0;
@@ -123,10 +124,8 @@ nav h1 {
 
 nav ul {
   display: flex;
-  width: 80%;
   flex-direction: row;
   justify-content: flex-end;
-  margin: 0;
   padding: 0;
 }
 nav ul li {
@@ -187,4 +186,23 @@ nav ul li a:hover {
 }
 .view-pg-link:hover {
   background-color: #0002;
+}
+.green-bg {
+  background-color: #090;
+}
+.red-bg {
+  background-color: #900;
+}
+.m-l-5 {
+  margin-left: 5rem;
+}
+.flex {
+  display: flex;
+}
+.row {
+  flex-direction: row;
+  align-items: center;
+}
+.m-auto {
+  margin: auto;
 }

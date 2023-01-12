@@ -15,6 +15,6 @@ block content
         section.view-pg-link.grid
             a.gr-row(href= link.href)= link.name.replaceAll('_', '/')
             p.gr-row
-                a.edit.btn(href='/run-test/'+link.name style='margin-left:1rem') Edit
+                a.green-bg.btn(href='/run-test/'+link.name style='margin-left:1rem') Edit
             p.gr-row
-                a.delete.btn(href='/delete/'+link.name style='margin-left:1rem') Delete
+                a.red-bg.btn(href='/delete/'+link.name style='margin-left:1rem') Delete

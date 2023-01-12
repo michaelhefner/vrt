@@ -7,11 +7,4 @@ html
   body
     include navbar
     main
-      if user
-        p Hey &nbsp;
-          strong #{user.nickname},
-        p Welcome to #{title}!
-      else
-        p Welcome, ready to login?
-
       block content

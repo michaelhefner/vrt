@@ -30,9 +30,30 @@ head
         }
     include navbar
 #root
+
+    #loading 
+        h1 Loading Report
 script.
     function report (report) { // eslint-disable-line no-unused-vars
         window.tests = report;
+    }
+    const loadInterval = setInterval(loading, 2000);
+
+    function loading() {
+        let currentCount = parseInt(location.href.slice(location.href.indexOf('?')+1));
+        let currentUrl = location.href.indexOf('?') !== -1 ? location.href.slice(0, location.href.indexOf('?')+1) : location.href;
+        let setUrl = currentUrl;
+        if (isNaN(currentCount)) {
+            currentCount = 1;
+            setUrl += '?'
+        } else {
+            currentCount++;
+        }
+        if (!#{exists}) {
+            location.href = `${setUrl + currentCount}`;
+        } else {
+            clearInterval(loadInterval);
+        }
     }
 script(src='config.js')
 script(src='index_bundle.js')

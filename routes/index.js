@@ -17,7 +17,7 @@ router.get("/", function(req, res, next) {
 });
 router.get("/run-test", requiresAuth(), function(req, res, next) {
     res.render("run-test",{
-        title: "Regression Test Config",
+        title: "Run Test",
         user: req.oidc.user,
         body: req.body,
         config: config
@@ -28,7 +28,7 @@ router.get("/run-test/:id", requiresAuth(), function(req, res, next) {
     const editConfig = require(`../snapshots/${req.params.id}/backstop.json`)
     console.log('edit config', editConfig);
     res.render("run-test",{
-        title: "Regression Test Config",
+        title: "Run Test",
         user: req.oidc.user,
         body: req.body,
             config: editConfig
@@ -37,23 +37,27 @@ router.get("/run-test/:id", requiresAuth(), function(req, res, next) {
 router.post("/run-test", requiresAuth(), function(req, res, next) {
     backstop.backstopReference(req, res);
     res.redirect( '/view-test');
+    // res.json({message: 'success'})
 
 });
 
-router.get("/delete/:id", requiresAuth(), (req, res) => {
-    const parentDir = req.params.id.indexOf('/') > -1 ? req.params.id.slice(0, req.params.id.indexOf('/')).replace('_', '/') : req.params.id.replace('_', '/');
-    console.log("delete: ", parentDir),
-    fs.rmSync(path.join(__dirname, `../../${parentDir}`), { recursive: true, force: true });
-    res.send(req.oidc.isAuthenticated() ? "Logged in" : "Logged out");
+router.get("/delete/:id", requiresAuth(), (req, res, next) => {
+    const parentDir = req.params.id.indexOf('/') > -1 ? req.params.id.slice(0, req.params.id.indexOf('/')).replace('_', '/') : req.params.id.replace('_', '/').replace('..', '');
+    if (fs.existsSync(path.join(__dirname, `../snapshots/${parentDir}`))) {
+        fs.rmSync(path.join(__dirname, `../snapshots/${parentDir}`), { recursive: true, force: true });
+        res.redirect('/view-test');
+    } else {
+        next({message: "sorry this test was not found"});
+    }
 });
-router.get("/view-test", requiresAuth(), (req, res) => {
+router.get("/view-test", requiresAuth(), (req, res, next) => {
     fs.readdir(path.join(__dirname, '../snapshots'), (err, files) =>{
         if (files) {
             const links = files.map((val) => {
                 return {href: `report/${val}`, name: val}
             });
             res.render('view-test',{
-                title: "Regression Test View",
+                title: "View Tests",
                 user: req.oidc.user,
                 body: req.body,
                 config: config,
@@ -62,7 +66,7 @@ router.get("/view-test", requiresAuth(), (req, res) => {
         } else {
 
             res.render('view-test',{
-                title: "Regression Test View",
+                title: "View Tests",
                 user: req.oidc.user,
                 body: req.body,
                 config: config
@@ -76,9 +80,13 @@ router.get('/report/:id', requiresAuth(), (req, res, next) => {
 })
 
 router.get("/report/*/backstop_data/html_report/test-index",requiresAuth(), function(req, res, next) {
+    const param = req.url.slice(req.url.indexOf('?')+1);
+    const folder = req.url.replace('/report', 'snapshots').replace('test-index', 'index.html').replace(`?${param}`, '');
+    const fileExists =  fs.existsSync(`${folder}`);
     res.render("test-index", {
-        title: "Regression Testing",
+        title: "Report",
         user: req.oidc.user,
+        exists: fileExists,
     });
 });
 module.exports = router;

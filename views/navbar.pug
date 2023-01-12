@@ -1,5 +1,11 @@
 nav
-    h1= title
+    h1 VRT #{title}
+
+    if user
+        p(style="margin: auto;") Hello&nbsp;
+            strong #{user.nickname}!
+    else
+        p Welcome, ready to login?
     ul
         li
             a(href='/') Home
@@ -11,7 +17,7 @@ nav
             //li
             //  a(href='/reference') Run New Test
             li
-                a(href="/logout") Logout
+                a.red-bg(href="/logout") Logout
         else
             li
-                a(href="/login") Login
+                a.green-bg(href="/login") Login
