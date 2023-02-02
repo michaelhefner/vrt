@@ -1,20 +1,12 @@
 extends layout
 
 block content
-    h3 Saved Reports
-
-    
-    section.grid
-        p.gr-row
-            | Test
-        p.gr-row
-            | Edit
-        p.gr-row
-            | Delete
-    each link in links
-        section.view-pg-link.grid
-            a.gr-row(href= link.href)= link.name.replaceAll('_', '/')
-            p.gr-row
-                a.green-bg.btn(href='/run-test/'+link.name style='margin-left:1rem') Edit
-            p.gr-row
-                a.red-bg.btn(href='/delete/'+link.name style='margin-left:1rem') Delete
+    .input-container
+        h3 Saved Reports
+        each link in links
+            section.view-pg-link.grid
+                a.gr-row(href= link.href)= link.name.replaceAll('_', '/')
+                p.gr-row
+                    a.green-bg.btn(href='/run-test/'+link.name style='margin-left:1rem') Edit
+                p.gr-row
+                    a.red-bg.btn(href='/delete/'+link.name style='margin-left:1rem') Delete

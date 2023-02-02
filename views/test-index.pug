@@ -28,6 +28,26 @@ head
         .ReactModal__Body--open .header {
             display: none;
         }
+        #loading{
+            position: relative;
+            min-height: 100vh;
+            min-width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: pulse 2s infinite ease-in-out;
+        }
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
     include navbar
 #root
 

@@ -15,6 +15,12 @@ router.get("/", function(req, res, next) {
         user: req.oidc.user,
     });
 });
+router.get("/home", function(req, res, next) {
+    res.render("home", {
+        title: "Regression Testing",
+        user: req.oidc.user,
+    });
+});
 router.get("/run-test", requiresAuth(), function(req, res, next) {
     res.render("run-test",{
         title: "Run Test",

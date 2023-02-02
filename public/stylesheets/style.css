@@ -1,20 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500&display=swap');
+
 * {
   font-family: 'Roboto', sans-serif;
-}
-main {
-  padding: 2rem;
-}
-body {
   padding: 0;
   margin: 0;
 }
+
+main {
+  margin-top: 200px;
+  padding: 2rem;
+  width: 80%;
+}
+
+li {
+  list-style: none;
+}
+
 .form-container {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 form {
   display: flex;
   flex-direction: row;
@@ -40,56 +48,80 @@ form input {
   padding: 1.5rem 1rem .25rem;
   transition: all 500ms ease-in-out;
 }
+
 form input:focus {
   margin-top: 0;
   padding: .25rem;
 }
+
 form button {
   margin-left: auto;
   border: none;
-  background-color: darkslategray;
+  background-color: green;
   color: white;
   padding: .5rem 2rem;
   border-radius: .2rem;
+  font-size: 1.5rem;
   cursor: pointer;
-  transition: background-color 600ms ease-in-out;
+  border-radius: 5px;
+  box-shadow: 0 5px 15px -10px #000;
+  transition: background 600ms ease-in-out;
 }
+
 form button:hover {
   background: whitesmoke;
   color: darkslategray;
 }
 
-form .input-container {
+.input-container {
   display: flex;
   flex-direction: column;
   border: solid 1px #0002;
   padding: 0 .5rem;
   margin: .5rem .25rem;
-  background-color: #efefef44;
+  background-color: #fff;
+  border-radius: 10px;
+  color: #000;
+  box-shadow: 0 5px 15px -10px #000;
+}
+
+.input-container h3 {
+  margin: 1rem .5rem;
+  border-bottom: solid 1px #0008
 }
 
 form .id {
   min-width: 300px;
   flex: 1;
 }
+
 form .fold {
   height: 0;
   transform: scaleY(0);
   transform-origin: top;
   transition: all 500ms ease-in-out;
 }
+
+.show .fold {
+  height: 100%;
+  transform: scaleY(1);
+}
+
 form .viewport-list,
 form .viewports,
-form .scenario{
+form .scenario {
   width: 100%;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
 }
-form  h4 {
+
+form h4 {
   width: 100%;
   cursor: pointer;
+  margin: 1rem 0;
 }
+
 form .viewport-list .viewport,
 form .viewports .viewport,
 form .scenario .input {
@@ -98,111 +130,230 @@ form .scenario .input {
   display: flex;
   flex-direction: column;
   border: solid 1px #0002;
-  background-color: #eee6;
+  background-color: #fff;
   padding: .5rem;
   margin: .5rem;
+  border-radius: 10px;
 }
+
 form .urlinfo {
   min-width: 70%;
+  flex: 1;
 }
 
-    /************************
-    nav
-    /************************/
-nav {
+#loading {
+  margin: auto;
+  height: 100vh;
+  width: 100vw;
   display: flex;
-  flex-direction: row;
-  background: whitesmoke;
+  justify-content: center;
   align-items: center;
-  padding: .5rem;
-  width: 99%;
-}
-nav h1 {
-  margin: 0;
-  padding: 0 1rem;
 }
 
-nav ul {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  padding: 0;
-}
-nav ul li {
-  list-style: none;
-  margin: .5rem 1rem;
-}
-nav ul li a{
-  text-decoration: none;
-  padding: .5rem 1rem;
-  background: darkblue;
-  border-radius: .25rem;
-  color: white;
-  transition: all 600ms ease-in-out;
-}
-nav ul li a:hover {
-  color: darkblue;
-  background: whitesmoke;
-}
+@media screen and (max-width: 769px) {
 
-@media screen and (max-width: 769px){
-  nav, nav ul {
+  header nav,
+  header nav ul {
     flex-direction: column;
   }
-  nav ul li a {
+
+  header nav ul li a {
     display: block;
     text-align: center;
   }
 }
+
+body {
+  background-color: #0059A2;
+  /* background-color: #136A6A; */
+  /* background-color: rgb(99, 3, 189); */
+  width: 100vw;
+  /* height: 100vh; */
+  display: flex;
+  position: relative;
+  overflow-x: hidden;
+  flex-direction: column;
+  color: white;
+}
+body #root {
+  margin-top: 250px
+}
+
+body #root h1, 
+body #root h3,
+body #root a
+{
+  color: white;
+}
+nav.left-nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  position: absolute;
+  top: -500px;
+  height: 1000px;
+  right: -500px;
+  width: 1000px;
+  border: none;
+  border-radius: 50%;
+  background-color: #000a;
+  box-shadow: 0 0 15px #0003;
+}
+
+nav.left-nav.active {
+  height: 600px;
+  width: 600px;
+  top: -300px;
+  right: -300px;
+}
+nav.left-nav a {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  border: none;
+  transition: all .6s ease-in-out;
+  cursor: pointer;
+  background-color: #0059A2;
+  background-color: #fff;
+  background-color: #fff1;
+  position: absolute;
+  border: solid 1px #fff;
+  border: solid 0px #000;
+  color: #fff;
+  /* color: #000; */
+  box-shadow: 0 0 15px #0003;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+nav.left-nav.active a {
+  width: 75px;
+  height: 75px;
+}
+nav.left-nav a p {
+  white-space: nowrap;
+  transition: all .3s ease-in-out;
+  font-weight: 600;
+}
+
+nav.left-nav.active a:nth-of-type(1) {
+  left: -30px;
+  bottom: 200px;
+}
+
+nav.left-nav.active a:nth-of-type(2) {
+  left: 10px;
+  bottom: 110px;
+}
+
+nav.left-nav.active a:nth-of-type(3) {
+  left: 75px;
+  bottom: 30px;
+}
+
+nav.left-nav.active a:nth-of-type(4) {
+  left: 165px;
+  bottom: -15px
+}
+
+nav.left-nav a:nth-of-type(1) {
+  left: -25px;
+  bottom: 375px;
+}
+
+nav.left-nav a:nth-of-type(2) {
+  left: 40px;
+  bottom: 200px;
+}
+
+nav.left-nav a:nth-of-type(3) {
+  left: 180px;
+  bottom: 50px;
+}
+
+nav.left-nav a:nth-of-type(4) {
+  left: 375px;
+  bottom: -25px
+}
+
+nav.left-nav a:hover {
+  transform: scale(2);
+  background-color: #0003;
+  border: solid 1px white;
+}
+
+main {
+  margin-top: 200px;
+  padding: 2rem;
+  width: 80%;
+}
+
 
 .grid {
   display: grid;
   grid-template-columns: 70% auto auto;
 
 }
+
 .gr-row {
   padding: 1rem 0;
   margin: 0;
 }
+
 .grid:nth-child(odd) {
   background-color: #eee;
 }
+
 .btn {
-  padding: .5rem 1rem; 
+  padding: .5rem 1rem;
   border-radius: 3px;
   text-decoration: none;
   color: white;
-  transition: all 300ms ease-in-out;
+  transition: background 300ms ease-in-out;
 }
+
 .btn:hover {
   background-color: white;
   color: black;
 }
+
 .edit {
   background-color: green;
 }
+
 .delete {
   background-color: #900;
 }
+
 .view-pg-link:hover {
   background-color: #0002;
 }
-.green-bg {
+
+.green-bg, .green-hover:hover {
   background-color: #090;
 }
-.red-bg {
+
+.red-bg, .red-hover:hover {
   background-color: #900;
 }
+
 .m-l-5 {
   margin-left: 5rem;
 }
+
 .flex {
   display: flex;
 }
+
 .row {
   flex-direction: row;
   align-items: center;
 }
+
 .m-auto {
   margin: auto;
 }

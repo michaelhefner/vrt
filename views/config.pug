@@ -68,23 +68,10 @@ section.form-container
                             label(for='selector-requireSameDimensions') Require Same Dimensions
                             input(type='text' name='selector-requireSameDimensions' value= selector.requireSameDimensions id='selector-requireSameDimensions')
         button(type='submit') Run
+        script.
+            const viewports = document.querySelector('.input-container.viewports');
+            console.log(viewports);
+            viewports.addEventListener('click', () => {
+            viewports.classList.toggle('show');
 
-
-        //"paths": {
-        //"bitmaps_reference": "backstop_data/bitmaps_reference",
-        //"bitmaps_test": "backstop_data/bitmaps_test",
-        //"engine_scripts": "backstop_data/engine_scripts",
-        //"html_report": "backstop_data/html_report",
-        //"ci_report": "backstop_data/ci_report"
-        //},
-        //"report": ["browser"],
-        //"engine": "puppeteer",
-        //"engineOptions": {
-        //"args": ["--no-sandbox"]
-        //},
-        //"asyncCaptureLimit": 10,
-        //"asyncCompareLimit": 50,
-        //"debug": true,
-        //"debugWindow": false
-        //}
-        //
+            })
