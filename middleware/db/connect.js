@@ -56,4 +56,8 @@ const { Pool } = require('pg');
           );
           `
     );
+    /*
+
+    TODO: Need to create a new table for test results, pass and error
+    */
 module.exports = { pool };
