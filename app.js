@@ -7,7 +7,10 @@ require('dotenv').config()
 var session = require('express-session');
 const { requiresAuth } = require("express-openid-connect");
 
+const pool = require('./middleware/db/connect')
 var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/users');
+var reportRouter = require('./routes/report');
 
 var app = express();
 
@@ -26,7 +29,9 @@ const config = {
   issuerBaseURL: process.env.auth0_issuer_base_url
 };
 
-// auth router attaches /login, /logout, and /callback routes to the baseURL
+/*
+Add openid connect 
+*/
 app.use(auth(config));
 
 app.use(logger('dev'));
@@ -35,7 +40,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use('/', express.static(path.join(__dirname, 'public')));
-app.set('trust proxy', 1) // trust first proxy
+/*
+Trust the reverse proxy
+*/
+app.set('trust proxy', 1) 
 app.use(session({
   secret: process.env.session_secret,
   resave: false,
@@ -45,6 +53,8 @@ app.use(session({
 app.use('/report', express.static(path.join(__dirname, 'snapshots/')));
 
 app.use('/', indexRouter);
+app.use('/report', reportRouter);
+app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

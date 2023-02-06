@@ -4,47 +4,97 @@ const { requiresAuth } = require("express-openid-connect");
 const backstop = require("../middleware/backstop/index.js");
 const config = require('../default.json');
 const fs = require('fs');
-const path = require('path')
+const path = require('path');
+const dbhandler = require('../middleware/db/handler');
+const { v4: uuidv4 } = require('uuid');
+
+const populateTest = async (req) => {
+    let baseUrlId = '';
+    let testUrlId = '';
+    let userGroup = '';
+    const title = req.body.id;
+    const getuserGroup = async () => {
+        return await dbhandler.select.query('users', 'user_group', `WHERE uuid='${req.oidc.user.sub}'`)
+            .then(response => { console.log('USER GOUP RESPONSE', response); return response; })
+            .then(response => response && response !== undefined && response[0] ? response[0].user_group : -1)
+    }
+    const getUrlMatch = async (url) => {
+        return await dbhandler.select.query('urls', 'id', `WHERE url='${url}'`)
+            .then(response => { console.log('SELECT URL RESPONSE', response); return response; })
+            .then(response => response && response !== undefined && response[0] ? response[0].id : -1)
+    };
+    const insertUrl = async (url) => {
+        await dbhandler.insert.url(url);
+        return getUrlMatch(url);
+    };
+    const insertTest = async () => {
+        dbhandler.insert.test(baseUrlId, testUrlId, title, userGroup);
+    }
+
+    userGroup = await getuserGroup();
+
+    baseUrlId = await getUrlMatch(req.body.referenceUrl);
+    if (baseUrlId === -1) {
+        baseUrlId = await insertUrl(req.body.referenceUrl)
+    }
+
+    testUrlId = await getUrlMatch(req.body.testUrl);
+    if (testUrlId === -1) {
+        testUrlId = await insertUrl(req.body.testUrl)
+    }
+
+    if (baseUrlId !== -1 && testUrlId !== -1 && userGroup !== -1) {
+        insertTest().then(response => console.log('INSERT TEST RESPONSE', response));
+    }
+
+}
 
 
-router.get("/", function(req, res, next) {
-    // fs.mkdir(path.join(__dirname, '../snapshots'),(res)=>console.log(res));
-    // fs.writeFileSync(path.join(__dirname, '../snapshots/default.json'), JSON.stringify(config, null, 2));
-    res.render("index", {
-        title: "Regression Testing",
-        user: req.oidc.user,
-    });
+router.get("/", function (req, res, next) {
+    const user = req.oidc.user;
+    if (user !== null && user !== undefined) {
+        const userMatch = dbhandler.select.query('users', '*', `WHERE uuid='${user.sub}' and email='${user.email}'`);
+        userMatch.then(results => {
+            if (results.length === 0) {
+                const userGroup = uuidv4();
+                dbhandler.insert.user(user.nickname, user.email, user.sub, userGroup).then(response => console.log(response));
+            }
+        })
+        res.render("index", {
+            title: "Regression Testing",
+            user: req.oidc.user,
+        });
+    } else {
+        res.render('index', { title: 'Visual Regression Testing' });
+    }
 });
-router.get("/home", function(req, res, next) {
-    res.render("home", {
-        title: "Regression Testing",
-        user: req.oidc.user,
-    });
-});
-router.get("/run-test", requiresAuth(), function(req, res, next) {
-    res.render("run-test",{
+
+router.get("/run-test", requiresAuth(), function (req, res, next) {
+    res.render("run-test", {
         title: "Run Test",
         user: req.oidc.user,
         body: req.body,
         config: config
     });
 });
-router.get("/run-test/:id", requiresAuth(), function(req, res, next) {
-    console.log('request id',req.params.id);
+router.get("/run-test/:id", requiresAuth(), function (req, res, next) {
     const editConfig = require(`../snapshots/${req.params.id}/backstop.json`)
-    console.log('edit config', editConfig);
-    res.render("run-test",{
+    res.render("run-test", {
         title: "Run Test",
         user: req.oidc.user,
         body: req.body,
-            config: editConfig
+        config: editConfig
     });
 });
-router.post("/run-test", requiresAuth(), function(req, res, next) {
-    backstop.backstopReference(req, res);
-    res.redirect( '/view-test');
-    // res.json({message: 'success'})
-
+router.post("/run-test/test", requiresAuth(), (req, res, next) => {
+    backstop.backstopTest(req);
+    populateTest(req);
+    res.redirect('/view-test');
+});
+router.post("/run-test/reference", requiresAuth(), (req, res, next) => {
+    backstop.backstopReference(req);
+    populateTest(req);
+    res.redirect('/view-test');
 });
 
 router.get("/delete/:id", requiresAuth(), (req, res, next) => {
@@ -53,16 +103,17 @@ router.get("/delete/:id", requiresAuth(), (req, res, next) => {
         fs.rmSync(path.join(__dirname, `../snapshots/${parentDir}`), { recursive: true, force: true });
         res.redirect('/view-test');
     } else {
-        next({message: "sorry this test was not found"});
+        next({ message: "sorry this test was not found" });
     }
 });
+
 router.get("/view-test", requiresAuth(), (req, res, next) => {
-    fs.readdir(path.join(__dirname, '../snapshots'), (err, files) =>{
+    fs.readdir(path.join(__dirname, '../snapshots'), (err, files) => {
         if (files) {
             const links = files.map((val) => {
-                return {href: `report/${val}`, name: val}
+                return { href: `report/${val}`, name: val }
             });
-            res.render('view-test',{
+            res.render('view-test', {
                 title: "View Tests",
                 user: req.oidc.user,
                 body: req.body,
@@ -71,7 +122,7 @@ router.get("/view-test", requiresAuth(), (req, res, next) => {
             });
         } else {
 
-            res.render('view-test',{
+            res.render('view-test', {
                 title: "View Tests",
                 user: req.oidc.user,
                 body: req.body,
@@ -81,18 +132,4 @@ router.get("/view-test", requiresAuth(), (req, res, next) => {
     })
 });
 
-router.get('/report/:id', requiresAuth(), (req, res, next) => {
-    res.redirect(`/report/${req.params.id}/backstop_data/html_report/test-index`)
-})
-
-router.get("/report/*/backstop_data/html_report/test-index",requiresAuth(), function(req, res, next) {
-    const param = req.url.slice(req.url.indexOf('?')+1);
-    const folder = req.url.replace('/report', 'snapshots').replace('test-index', 'index.html').replace(`?${param}`, '');
-    const fileExists =  fs.existsSync(`${folder}`);
-    res.render("test-index", {
-        title: "Report",
-        user: req.oidc.user,
-        exists: fileExists,
-    });
-});
 module.exports = router;

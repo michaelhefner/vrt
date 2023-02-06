@@ -1,6 +1,6 @@
 
 section.form-container
-    form(method='POST' action='/run-test')
+    form(method='POST' action='/run-test/reference')
         div.input-container.id
             h4 Test ID
             label(for='id') ID
@@ -67,11 +67,20 @@ section.form-container
                         div.input
                             label(for='selector-requireSameDimensions') Require Same Dimensions
                             input(type='text' name='selector-requireSameDimensions' value= selector.requireSameDimensions id='selector-requireSameDimensions')
-        button(type='submit') Run
+        button#ref-btn Set as New Reference
+        
+        button#test-btn(type='submit') Run Test 
         script.
             const viewports = document.querySelector('.input-container.viewports');
-            console.log(viewports);
+            const setRef = document.querySelector('#ref-btn');
+            const setTest = document.querySelector('#test-btn');
             viewports.addEventListener('click', () => {
-            viewports.classList.toggle('show');
-
-            })
+                viewports.classList.toggle('show');
+            });
+            const form = document.querySelector('form');
+            setRef.addEventListener('click', () => {
+                form.action = '/run-test/reference';
+            });
+            setTest.addEventListener('click', () => {
+                form.action = '/run-test/test';
+            });

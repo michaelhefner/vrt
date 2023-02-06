@@ -3,11 +3,7 @@ const config = require("../../default.json");
 const fs = require('fs');
 const path = require('path');
 
-function backstopInit(data) {
-    return backstop('init', {data});
-}
-
-function backstopReference(req,res) {
+const setConfig = (req) => {
     const trimmedFileName = (req.body.testUrl.slice(req.body.testUrl.indexOf('://') + 3, req.body.testUrl.length)).replaceAll('/', '_');
     config.id = req.body.id;
     config.scenarios[0].label = req.body.id;
@@ -34,14 +30,38 @@ function backstopReference(req,res) {
         "html_report": path.join(__dirname, `../../${filename}/backstop_data/html_report`),
         "ci_report": path.join(__dirname, `../../${filename}/backstop_data/ci_report`)
     };
-    console.log('save backstop json', `${filename}/backstop.json`)
     fs.existsSync(filename) || fs.mkdirSync(filename);
     fs.writeFile(path.join(__dirname, `../../${filename}/backstop.json`), JSON.stringify(config), (err, res)=>{
         console.log('error', err, 'result', res);
     })
-    backstop("reference", {config: config}).then(()=>backstop("test", {config: config}));
+}
 
+const backstopTest = (req) => {
+    setConfig(req);
+    backstop("test", {config: config}).then(result => {
+        /*
+
+        TODO: you need to send results to the database
+
+        */
+        console.log('*****TEST RESULT*****', result)
+    }).catch(error => {
+        /*
+
+        TODO: you need to send results to the database
+
+        */
+        console.log('****TEST ERROR****', error);
+    });
+}
+
+const backstopReference = (req) => {
+    setConfig(req);
+    backstop("reference", {config: config}).then((result)=> {
+        console.log('*****REFERENCE RESULT******', result);
+    });
 }
 
 
 exports.backstopReference = backstopReference;
+exports.backstopTest = backstopTest;
