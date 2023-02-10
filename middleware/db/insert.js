@@ -2,13 +2,6 @@ const { pool } = require("./connect.js");
 
 module.exports = {
   user: async (username, email, uuid, user_group) => {
-    
-    console.log(
-      `
-      INSERT INTO users (username, email, uuid, user_group) 
-      VALUES ('${username}', '${email}', '${uuid}', '${user_group}')
-      `
-      );
     try {
       pool
         .query(
@@ -23,11 +16,6 @@ module.exports = {
   },
   url: async (url) => {
     try {
-      console.log(
-        `
-        INSERT INTO urls (url) 
-        VALUES ('${url}')
-        `);
       pool
         .query(
           `
@@ -41,10 +29,6 @@ module.exports = {
   },
   test: async (baseUrl, testUrl, title, user_group) => {
     try {
-      console.log(          `
-      INSERT INTO tests (base_url_id, test_url_id, title, user_group) 
-      VALUES ('${baseUrl}', '${testUrl}', '${title}', '${user_group}')
-      `);
       pool
         .query(
           `

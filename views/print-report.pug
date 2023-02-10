@@ -1,0 +1,12 @@
+extends layout
+
+block content
+    each test in data.tests
+        .input-container
+            h3 Viewport: #{test.pair.viewportLabel} #{test.pair.label}
+            p
+            | Test Url: #{test.pair.url}
+            p
+            | Reference Url: #{test.pair.referenceUrl}
+            if test.status == 'fail'
+                a.btn.red-bg(href= originalUrl + '/' + test.pair.diffImage, style='margin-left: auto;') Failed Image

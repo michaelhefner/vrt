@@ -1,6 +1,7 @@
 const { pool } = require("./connect.js");
 const select = require("./select");
 const insert = require("./insert");
+const qDelete = require("./delete");
 
 const databaseCheck = () => {
   return pool.query(
@@ -20,4 +21,4 @@ databaseCheck("VRT").then((res) => {
   }
 });
 
-module.exports = { select, insert };
+module.exports = { select, insert, qDelete };

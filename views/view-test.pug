@@ -1,12 +1,37 @@
 extends layout
 
 block content
+    .input-container 
+        h3 Search Reports 
+        div(style='display: flex; flex-direction: column; margin: .25rem 2rem;')
+            label(for='search') Search
+            input#search(placeholder="www.example.com", style='max-width: 50%;')
     .input-container
         h3 Saved Reports
-        each link in links
-            section.view-pg-link.grid
-                a.gr-row(href= link.href)= link.name.replaceAll('_', '/')
-                p.gr-row
-                    a.green-bg.btn(href='/run-test/'+link.name style='margin-left:1rem') Edit
-                p.gr-row
+        .tests
+            each link in links
+                section.view-pg-link.flex
+                    p.title= link.name.replaceAll('_', '/')
+                    if link.testReady && link.referenceReady
+                        a.green-bg.btn(href= link.href style='margin-left:1rem') View
+                        a.green-bg.btn(href= link.allTests style='margin-left:1rem') Report History
+                        a.blue-bg.btn(href='/run-test/'+link.name style='margin-left:1rem') New Test
+                    if !link.referenceReady
+                        a.btn.purple-bg(href= '/run-test/' + link.name, style='margin-left:1rem') Run Reference
+                    if !link.testReady 
+                        a.btn.blue-bg(href= '/run-test/' + link.name, style='margin-left:1rem') Run Test
                     a.red-bg.btn(href='/delete/'+link.name style='margin-left:1rem') Delete
+                    
+
+    script. 
+        const itemContainer = document.querySelector('.tests');
+        const items = document.querySelectorAll('section.view-pg-link.flex');
+        const searchString = document.querySelector('input#search');
+        let results = [];
+        searchString.addEventListener('keyup', (e)=>{
+            results = [...items].filter(ea=> ea.children[0].innerText.indexOf(e.target.value) > -1);
+            itemContainer.innerHTML = '';
+            for (let res of results) {
+                itemContainer.appendChild(res)
+            }
+        });

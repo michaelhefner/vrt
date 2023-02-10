@@ -1,20 +1,21 @@
-h1 VRT
-h2 #{title}
-
-if user
-
-    p(style="margin: auto;") Hello&nbsp;
-        strong #{user.nickname}!
-else
-    p Welcome, ready to login?
-nav.left-nav.active
-    if user !== undefined
-        a.green-hover(href='/run-test')
-            p Run Test
-        a(href='/view-test')
-            p View Test
-        a.red-hover(href='/logout')
-            p Logout
+div(style="color: white; z-index: 5; position: fixed; width: 100%; display: flex; flex-direction: row; align-items:center; max-width: 100%; background-color: #0059A2;")
+    h2(style="margin: .5rem 3rem 0; white-space: nowrap; width: 15%;") #{title}
+    div.navbar2
+        nav.header2
+            .menu2
+                if user !== undefined
+                    li
+                        a(href='/run-test') Run Test
+                    li
+                        a(href='/view-test') View Test
+                    li
+                        a(href='/logout') Logout
+                else
+                    li
+                        a(href='/login') Login
+    
+    if user
+        p(style="margin: .5rem 3rem 0 auto;  width: 15%;")  Hello&nbsp;
+            strong #{user.nickname}!
     else
-        a(href='/login')
-            p Login
+        p(style="margin-left: 3rem;  width: 15%;") Welcome, ready to login?

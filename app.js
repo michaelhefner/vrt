@@ -10,7 +10,6 @@ const { requiresAuth } = require("express-openid-connect");
 const pool = require('./middleware/db/connect')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var reportRouter = require('./routes/report');
 
 var app = express();
 
@@ -53,7 +52,6 @@ app.use(session({
 app.use('/report', express.static(path.join(__dirname, 'snapshots/')));
 
 app.use('/', indexRouter);
-app.use('/report', reportRouter);
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler

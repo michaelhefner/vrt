@@ -1,4 +1,97 @@
 extends layout
 
 block content
-    include config
+    section.form-container
+        form(method='POST' action='/run-test/reference')
+            div.input-container.id
+                h3 Step #1
+                h4 Test ID
+                label(for='id') ID
+                input(type='text' name='id' value= config.id id='id')
+            div.input-container.urlinfo
+                h3 Step #2
+                h4 URL Information
+                each scenario in config.scenarios
+                    label(for='referenceUrl') Reference URL
+                    input(type='text' name='referenceUrl' id='referenceUrl' value= scenario.referenceUrl)
+
+                each scenario in config.scenarios
+                    label(for='testUrl') Test URL
+                    input(type='text' name='testUrl' id='testUrl' value= scenario.url)
+            div.input-container.viewports
+                h4 Viewports
+                .fold
+                    .viewport-list
+                        each val in config.viewports
+                            div.viewport
+                                label(for='viewportLabel') Label
+                                input(type='text' name='viewportLabel' value= val.label id='viewportLabel')
+                                label(for='viewportWidth') Width
+                                input(type='text' name='viewportWidth' value= val.width id='viewportWidth')
+                                label(for='viewportHeight') Height
+                                input(type='text' name='viewportHeight' value= val.height id='viewportHeight')
+            div.input-container.scenario
+                h4 Additional Config Options
+                .config
+                    each scenerio in config.scenarios
+                        div.input
+                            label(for='scenario-delay') Delay
+                            input(type='text' name='scenario-delay' value= scenerio.delay id='scenario-delay')
+                        div.input
+                            label(for='scenario-readyEvent') Ready Event
+                            input(type='text' name='scenario-readyEvent' value= scenerio.readyEvent id='scenario-readyEvent')
+                        div.input
+                            label(for='scenario-readySelector') Ready Selector
+                            input(type='text' name='scenario-readySelector' value= scenerio.readySelector id='scenario-readySelector')
+                        div.input
+                            label(for='scenario-hideSelector') Hide Selector
+                            input(type='text' name='scenario-hideSelector' value= scenerio.hideSelector id='scenario-hideSelector')
+                        div.input
+                            label(for='scenario-removeSelector') Remove Selector
+                            input(type='text' name='scenario-removeSelector' value= scenerio.removeSelector id='scenario-removeSelector')
+                        div.input
+                            label(for='scenario-hoverSelector') Hover Selector
+                            input(type='text' name='scenario-hoverSelector' value= scenerio.hoverSelector id='scenario-hoverSelector')
+                        div.input
+                            label(for='scenario-clickSelector') Click Selector
+                            input(type='text' name='scenario-clickSelector' value= scenerio.hoverSelector id='scenario-clickSelector')
+                        div.input
+                            label(for='scenario-postInteractionWait') Post Interaction Wait
+                            input(type='text' name='scenario-postInteractionWait' value= scenerio.postInteractionWait id='scenario-postInteractionWait')
+                        //- each selector in scenerio.selectors
+                        //-     div.input
+                        //-         label(for='selector-selectorExpansion') Selector Expansion
+                        //-         input(type='text' name='selector-selectorExpansion' value= selector.selectorExpansion id='selector-selectorExpansion')
+                        //-     div.input
+                        //-         label(for='selector-expect') Expect
+                        //-         input(type='text' name='selector-expect' value= selector.expect id='selector-expect')
+                        //-     div.input
+                        //-         label(for='selector-misMatchThreshold') Mis Match Threshold
+                        //-         input(type='text' name='selector-misMatchThreshold' value= selector.misMatchThreshold id='selector-misMatchThreshold')
+                        //-     div.input
+                        //-         label(for='selector-requireSameDimensions') Require Same Dimensions
+                        //-         input(type='text' name='selector-requireSameDimensions' value= selector.requireSameDimensions id='selector-requireSameDimensions')
+            .input-container(style=" flex-direction: row; width: 100%;  justify-content: space-between; flex-wrap: wrap")
+                div(style="flex:1; display: flex; flex-direction: column;")
+                    h3 Step #4
+                    p(style="padding: .5rem .75rem;") Skip this step if you want to use the same reference images and just want to run a new test against those images.
+                    button#ref-btn(style="background: rebeccapurple; color: white; margin-left: auto;") Set Reference
+            .input-container(style=" flex-direction: row; width: 100%;  justify-content: space-between; flex-wrap: wrap")
+                div(style="flex:1; display: flex; flex-direction: column; height: 100%;")
+                    h3 Step #5
+                    p(style="padding: .5rem .75rem; flex: 1;") Execute test to generate a new regression report.
+                    button#test-btn(type='submit' style="background: #0059A2; color: white;") Run Test 
+        script.
+            const viewports = document.querySelector('.input-container.viewports h4');
+            const setRef = document.querySelector('#ref-btn');
+            const setTest = document.querySelector('#test-btn');
+            viewports.addEventListener('click', () => {
+                viewports.parentElement.classList.toggle('show');
+            });
+            const form = document.querySelector('form');
+            setRef.addEventListener('click', () => {
+                form.action = '/run-test/reference';
+            });
+            setTest.addEventListener('click', () => {
+                form.action = '/run-test/test';
+            });

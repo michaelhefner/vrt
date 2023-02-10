@@ -8,6 +8,9 @@ const path = require('path');
 const dbhandler = require('../middleware/db/handler');
 const { v4: uuidv4 } = require('uuid');
 
+/*
+Function to save test information to the database
+*/
 const populateTest = async (req) => {
     let baseUrlId = '';
     let testUrlId = '';
@@ -70,6 +73,7 @@ router.get("/", function (req, res, next) {
 });
 
 router.get("/run-test", requiresAuth(), function (req, res, next) {
+    // console.log('********************************* CONFIG ******************************', config);
     res.render("run-test", {
         title: "Run Test",
         user: req.oidc.user,
@@ -98,9 +102,13 @@ router.post("/run-test/reference", requiresAuth(), (req, res, next) => {
 });
 
 router.get("/delete/:id", requiresAuth(), (req, res, next) => {
-    const parentDir = req.params.id.indexOf('/') > -1 ? req.params.id.slice(0, req.params.id.indexOf('/')).replace('_', '/') : req.params.id.replace('_', '/').replace('..', '');
+    const parentDir = req.params.id.replaceAll('/', '_');
     if (fs.existsSync(path.join(__dirname, `../snapshots/${parentDir}`))) {
         fs.rmSync(path.join(__dirname, `../snapshots/${parentDir}`), { recursive: true, force: true });
+        dbhandler.select.query('urls', '*', `WHERE url LIKE '%${parentDir}'`)
+            .then(response => { console.log('URL RESPONSE', response); return response; })
+        // .then(response => response && response !== undefined && response[0] ? response[0].user_group : -1)
+        // dbhandler.delete('', `WHERE `)
         res.redirect('/view-test');
     } else {
         next({ message: "sorry this test was not found" });
@@ -111,8 +119,17 @@ router.get("/view-test", requiresAuth(), (req, res, next) => {
     fs.readdir(path.join(__dirname, '../snapshots'), (err, files) => {
         if (files) {
             const links = files.map((val) => {
-                return { href: `report/${val}`, name: val }
+                const testReady = fs.existsSync(path.join(__dirname, `../snapshots/${val}/backstop_data/bitmaps_test`));
+                const referenceReady = fs.existsSync(path.join(__dirname, `../snapshots/${val}/backstop_data/bitmaps_reference`));
+                return { 
+                    href: `report/${val}`, 
+                    name: val, 
+                    allTests: `view-tests/reports/${val}`, 
+                    testReady: testReady, 
+                    referenceReady: referenceReady 
+                }
             });
+            req.session.cookie.config = config;
             res.render('view-test', {
                 title: "View Tests",
                 user: req.oidc.user,
@@ -130,6 +147,64 @@ router.get("/view-test", requiresAuth(), (req, res, next) => {
             });
         }
     })
+});
+
+router.get("/view-tests/reports/:id", requiresAuth(), (req, res, next) => {
+    fs.readdir(path.join(__dirname, `../snapshots/${req.params.id}/backstop_data/bitmaps_test`), (err, files) => {
+        if (files) {
+            const links = files.map((val) => {
+                return { href: `/view-tests/reports/${req.params.id}/${val}`, name: val }
+            });
+            res.render('view-reports', {
+                title: "View Tests",
+                user: req.oidc.user,
+                body: req.body,
+                config: config,
+                links: links
+            });
+        } else {
+
+            res.render('view-test', {
+                title: "View Tests",
+                user: req.oidc.user,
+                body: req.body,
+                config: config
+            });
+        }
+    })
+});
+
+router.get("/view-tests/reports/:id/:report", requiresAuth(), (req, res, next) => {
+    let baseUrl = req.originalUrl;
+    baseUrl = baseUrl.replace('/view-tests/reports', '/report').replace(req.params.report, `backstop_data/${req.params.report}`);
+
+    fs.readFile(path.join(__dirname, `../snapshots/${req.params.id}/backstop_data/bitmaps_test/${req.params.report}/report.json`), (err, files) => {
+        const report = JSON.parse(files.toString());
+        const failures = report.tests.map(test => {
+            if (test.status === 'fail') {
+                return test;
+            }
+        });
+        console.log('************REPORT************', JSON.stringify(report));
+        res.render('print-report', { user: req.oidc.user, originalUrl: baseUrl, data: report });
+        // res.json(JSON.stringify(JSON.parse(files.toString())));
+    });
+});
+
+
+router.get('/report/:id', requiresAuth(), (req, res, next) => {
+    res.redirect(`/report/${req.params.id}/backstop_data/html_report/test-index`)
+})
+
+router.get("/report/*/backstop_data/html_report/test-index", requiresAuth(), function (req, res, next) {
+    const param = req.url.slice(req.url.indexOf('?') + 1);
+    const folder = req.url.replace('/report', 'snapshots').replace('test-index', 'index.html').replace(`?${param}`, '');
+    const fileExists = fs.existsSync(`${folder}`);
+    res.render("test-index", {
+        title: "Report",
+        user: req.oidc.user,
+        exists: fileExists,
+    });
 });
 
 module.exports = router;
