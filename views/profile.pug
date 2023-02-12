@@ -1,4 +1,12 @@
 extends layout
 
 block content
-    h1= user
+    .input-container(style='padding: 1rem; width: 50%; margin: auto; flex-direction: row')
+        img(src= user.picture, style='margin-right: 2rem')
+        div
+            p 
+                strong Username: 
+                | #{user.nickname}
+            p 
+                strong Email: 
+                | #{user.email}

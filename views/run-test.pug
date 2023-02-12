@@ -2,12 +2,12 @@ extends layout
 
 block content
     section.form-container
-        form(method='POST' action='/run-test/reference')
+        form(method='POST')
             div.input-container.id
                 h3 Step #1
                 h4 Test ID
                 label(for='id') ID
-                input(type='text' name='id' value= config.id id='id')
+                input(type='text' required minlength='5' name='id' value= config.id id='id')
             div.input-container.urlinfo
                 h3 Step #2
                 h4 URL Information
@@ -18,8 +18,10 @@ block content
                 each scenario in config.scenarios
                     label(for='testUrl') Test URL
                     input(type='text' name='testUrl' id='testUrl' value= scenario.url)
-            div.input-container.viewports
+            div.input-container.viewports(style="display: none;")
+                h3(style='width: 100%;') Step #3
                 h4 Viewports
+                p Skip this step if you are using the default/saved config options
                 .fold
                     .viewport-list
                         each val in config.viewports
@@ -31,7 +33,9 @@ block content
                                 label(for='viewportHeight') Height
                                 input(type='text' name='viewportHeight' value= val.height id='viewportHeight')
             div.input-container.scenario
+                h3(style='width: 100%;') Step #3
                 h4 Additional Config Options
+                p Skip this step if you are using the default/saved config options.
                 .config
                     each scenerio in config.scenarios
                         div.input
@@ -71,24 +75,75 @@ block content
                         //-     div.input
                         //-         label(for='selector-requireSameDimensions') Require Same Dimensions
                         //-         input(type='text' name='selector-requireSameDimensions' value= selector.requireSameDimensions id='selector-requireSameDimensions')
-            .input-container(style=" flex-direction: row; width: 100%;  justify-content: space-between; flex-wrap: wrap")
+            .input-container(style=" flex-direction: row; width: 40%; flex: 1; justify-content: space-between; flex-wrap: wrap")
                 div(style="flex:1; display: flex; flex-direction: column;")
                     h3 Step #4
                     p(style="padding: .5rem .75rem;") Skip this step if you want to use the same reference images and just want to run a new test against those images.
                     button#ref-btn(style="background: rebeccapurple; color: white; margin-left: auto;") Set Reference
-            .input-container(style=" flex-direction: row; width: 100%;  justify-content: space-between; flex-wrap: wrap")
+            .input-container(style=" flex-direction: row; width: 40%; flex: 1; justify-content: space-between; flex-wrap: wrap")
                 div(style="flex:1; display: flex; flex-direction: column; height: 100%;")
                     h3 Step #5
                     p(style="padding: .5rem .75rem; flex: 1;") Execute test to generate a new regression report.
-                    button#test-btn(type='submit' style="background: #0059A2; color: white;") Run Test 
+                    button#test-btn(style="background: #0059A2; color: white;") Run Test 
         script.
             const viewports = document.querySelector('.input-container.viewports h4');
+            const testID = document.querySelector('#id');
+            const referenceUrl = document.querySelector('#referenceUrl');
+            const testUrl = document.querySelector('#testUrl');
             const setRef = document.querySelector('#ref-btn');
             const setTest = document.querySelector('#test-btn');
             viewports.addEventListener('click', () => {
                 viewports.parentElement.classList.toggle('show');
             });
             const form = document.querySelector('form');
+
+            const setURLValidity = (e) => {
+                if (e.target.value.search(/[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/ig) !== -1) {
+                    e.target.classList.add('valid');
+                    e.target.classList.remove('invalid');
+                    e.target.setCustomValidity('');
+                } else {
+                    e.target.classList.remove('valid');
+                    e.target.classList.add('invalid');
+                    e.target.setCustomValidity('Invalid Url');
+                }
+
+            };            
+            const validateURL = (element) => {
+                if (element.value.search(/[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/ig) !== -1) {
+                    element.classList.add('valid');
+                    element.classList.remove('invalid');
+                    element.setCustomValidity('');
+                    return true;
+                } else {
+                    element.classList.remove('valid');
+                    element.classList.add('invalid');
+                    element.setCustomValidity('Invalid Url');
+                    return false;
+                }
+
+            };
+            testID.addEventListener('keyup', (e)=>{
+                testID.classList.add(testID.value.length > 1 ? 'valid' : 'invalid');
+                testID.classList.remove(testID.value.length < 2 ? 'valid' : 'invalid');
+            })
+            referenceUrl.addEventListener('keyup', setURLValidity);
+            testUrl.addEventListener('keyup', setURLValidity);
+            form.addEventListener('submit', (e) => {
+                if (!validateURL(referenceUrl)) {
+                    referenceUrl.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+                } else if (!validateURL(testUrl)) {
+                    testUrl.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+                } else if (!testID.checkValidity()) {
+                    testID.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+                }
+                e.preventDefault();
+                if (form.checkValidity()) {
+                    form.submit();
+                } else {
+                    console.log('invalid form');
+                }
+            });
             setRef.addEventListener('click', () => {
                 form.action = '/run-test/reference';
             });

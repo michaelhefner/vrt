@@ -2,7 +2,7 @@ const { pool } = require("./connect.js");
 
 module.exports = async (tableName, whereClause) => {
     try {
-        console.log(`*************** SELECT ${columns} FROM ${tableName} ${whereClause};`);
+        console.log(`*************** DELETE FROM ${tableName} ${whereClause};`);
         if (whereClause.toLowerCase().indexOf('where') > -1) {
             return await pool.query(
                 `DELETE FROM ${tableName} ${whereClause};`

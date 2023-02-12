@@ -382,8 +382,19 @@ nav.left-nav a:hover {
 }
 
 .menu2 li:hover::before,
-.menu2 li:hover::after {
+.menu2 li:hover::after,
+.menu2 li.active::before,
+.menu2 li.active::after {
   width: 100%;
   height: 100%;
   border-color: #fff;
+}
+
+input.valid {
+  border: solid 1px #0908;
+  background: #0902;
+}
+input.invalid {
+  border: solid 1px #9008;
+  background: #9002;
 }

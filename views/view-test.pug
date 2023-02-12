@@ -2,12 +2,12 @@ extends layout
 
 block content
     .input-container 
-        h3 Search Reports 
+        h3 Search Tests 
         div(style='display: flex; flex-direction: column; margin: .25rem 2rem;')
             label(for='search') Search
             input#search(placeholder="www.example.com", style='max-width: 50%;')
     .input-container
-        h3 Saved Reports
+        h3 Saved Tests
         .tests
             each link in links
                 section.view-pg-link.flex
@@ -30,6 +30,13 @@ block content
         let results = [];
         searchString.addEventListener('keyup', (e)=>{
             results = [...items].filter(ea=> ea.children[0].innerText.indexOf(e.target.value) > -1);
+            if (results.length > 0) {
+                e.target.classList.add('valid');
+                e.target.classList.remove('invalid');
+            } else {
+                e.target.classList.add('invalid');
+                e.target.classList.remove('valid');
+            }
             itemContainer.innerHTML = '';
             for (let res of results) {
                 itemContainer.appendChild(res)

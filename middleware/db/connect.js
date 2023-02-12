@@ -1,18 +1,11 @@
 const { Pool } = require('pg');
-// const pool = new Pool({
-//     user: process.env.db_username,
-//     database: "VRT",
-//     password: process.env.db_pw,
-//     port: process.env.db_port,
-//     host: process.env.db_host,
-//   });
-  const pool = new Pool({
-      user: "michael",
-      database: "VRT",
-      password: "P3n3!0p3",
-      port: 5432,
-      host: "localhost",
-    });
+const pool = new Pool({
+    user: process.env.db_username,
+    database: process.env.db_name,
+    password: process.env.db_pw,
+    port: process.env.db_port,
+    host: process.env.db_host,
+  });
     pool.query(
       `
       CREATE TABLE IF NOT EXISTS
@@ -25,22 +18,15 @@ const { Pool } = require('pg');
           created timestamp,
           unique(username, email, uuid)
           );
-          `
-    );
-    pool.query(
-      `
       CREATE TABLE IF NOT EXISTS
         URLS (id serial primary key,
           url varchar(255) NOT NULL,
           created timestamp,
           unique(url)
           );
-          `
-    );
-    pool.query(
-      `
       CREATE TABLE IF NOT EXISTS
-        Tests (id serial primary key,
+        Tests (
+          uuid varchar(64) primary key,
           base_url_id integer NOT NULL, 
           test_url_id integer NOT NULL, 
           title varchar(255) NOT NULL, 
