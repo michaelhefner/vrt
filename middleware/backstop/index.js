@@ -67,10 +67,9 @@ const backstopTest = async (req, uuid) => {
                 const jsonData = JSON.parse(data.toString());
                 for (let each of jsonData.tests) {
                     const failed = each.status === 'fail';
-                    dbhandler.insert.report(files[0], failed, uuid)
+                    dbhandler.insert.report(files[files.length -1], failed, each.pair.label, parseFloat(each.pair.diff.misMatchPercentage) || 0, each.pair.viewportLabel, each.pair.diff.analysisTime, uuid)
                     .then(result=>console.log('insert result', result))
                     .catch(error=>console.log('insert error', error));
-                    
                 }
             });
         }

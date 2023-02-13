@@ -48,19 +48,20 @@ module.exports = {
       return { message: error.detail, code: error.code, error: error };
     }
   },
-  report: async (uuid, failure, test_uuid) => {
+  report: async (uuid, failure, title, mis_match_percent, viewport, analysis_time, test_uuid) => {
     try {
       const date = (new Date).toLocaleString();
       console.log(
         `
-        INSERT INTO reports (uuid, failure, test_uuid) 
-        VALUES ('${uuid}','${failure}', '${test_uuid}', '${date}', '${date}')
-        `);
+        INSERT INTO reports (uuid, failure, title, mis_match_percent, viewport, analysis_time, test_uuid, last_updated, created) 
+        VALUES ('${uuid}','${failure}','${title}','${mis_match_percent}','${viewport}','${analysis_time}', '${test_uuid}', '${date}', '${date}')
+        `
+        );
       pool
         .query(
           `
-          INSERT INTO reports (uuid, failure, test_uuid, last_updated, created) 
-          VALUES ('${uuid}','${failure}', '${test_uuid}', '${date}', '${date}')
+          INSERT INTO reports (uuid, failure, title, mis_match_percent, viewport, analysis_time, test_uuid, last_updated, created) 
+          VALUES ('${uuid}','${failure}','${title}',${mis_match_percent},'${viewport}','${analysis_time}', '${test_uuid}', '${date}', '${date}')
           `
         );
     } catch (error) {

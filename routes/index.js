@@ -64,14 +64,16 @@ router.get("/", function (req, res, next) {
                     .then(response => console.log(response));
             }
         });
+        
         res.render("index", {
             title: "Regression Testing",
             active: 'Home',
-            user: req.oidc.user,
+            user: req.oidc.user
         });
     } else {
         res.render('index', { title: 'Visual Regression Testing' });
     }
+
 });
 
 router.get("/view-test", requiresAuth(), (req, res, next) => {
@@ -135,5 +137,15 @@ router.get("/report/*/backstop_data/html_report/test-index", requiresAuth(), fun
         exists: fileExists,
     });
 });
+
+router.post("/report/get-avg-mismatch", (req, res, next) => {
+    const getDataView = async () => {
+        return await dbhandler.select.avgMisMatch();
+    }
+    getDataView().then(result=> {
+        console.log(result);
+        res.json(result);
+    })
+})
 
 module.exports = router;
