@@ -9,7 +9,7 @@ router.get("/reports/:id", requiresAuth(), (req, res, next) => {
     fs.readdir(path.join(__dirname, `../snapshots/${req.params.id}/backstop_data/bitmaps_test`), (err, files) => {
         if (files) {
             const links = files.map((val) => {
-                return { href: `/view-tests/reports/${req.params.id}/${val}`, name: val }
+                return { href: `/view-tests/reports/${req.params.id}/${val}`, name: val, datetime: new Date(val.slice(0, 4), val.slice(4, 6), val.slice(6,8), val.slice(9,11), val.slice(11, 13), val.slice(13, 15)) }
             });
             res.render('view-reports', {
                 title: "View Tests",

@@ -227,9 +227,12 @@ nav.left-nav a:hover {
 .title {
   padding: 1rem 0;
   margin: 0 auto 0 0;
-  /* flex: 4; */
 }
-
+.last-updated {
+  font-size: .9rem;
+  padding: 1rem 0;
+  margin: 0 auto 0 0;
+}
 .grid:nth-child(odd) {
   background-color: #eee;
 }
@@ -258,7 +261,38 @@ nav.left-nav a:hover {
 .view-pg-link:hover {
   background-color: #0002;
 }
+.view-pg-link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
+.view-pg-link .action-items {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.view-pg-link .action-items a {
+  margin: 0;
+  padding: 1rem .5rem;
+  text-decoration: none;
+  border: solid 1px #00000005;
+  transition: opacity .4s ease-in-out;
+}
+
+.view-pg-link .action-items a:hover {
+  opacity: .75;
+  box-shadow: 0 0 15px #000c !important;
+}
+.flex-1 {
+  flex: 1;
+}
+.flex-2 {
+  flex: 2;
+}
+.flex-3 {
+  flex: 3;
+}
 .blue-bg {
   background-color: #0059A2;
   color: #fff;
@@ -270,16 +304,24 @@ nav.left-nav a:hover {
   color: #fff;
 }
 
-
+.grey-bg {
+  background-color: #3333;
+  color: #000;
+}
 .purple-bg {
   background-color: #8e54e9;
 }
 .green-bg, .green-hover:hover {
   background-color: #090;
+  color: white;
+  box-shadow: 0 0 10px #0003;
+
 }
 
 .red-bg, .red-hover:hover {
   background-color: #900;
+  color: white;
+
 }
 
 .m-l-5 {

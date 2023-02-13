@@ -3,10 +3,9 @@ const defaultConfig = require("../../default.json");
 const fs = require('fs');
 const path = require('path');
 let config = {...defaultConfig};
-const setConfig = (req) => {
-    const trimmedFileName = (req.body.testUrl).replaceAll('/', '_');
-    
-    const filename = `snapshots/${trimmedFileName}`;
+const dbhandler = require('../db/handler');
+const setConfig = (req, uuid) => {
+    const filename = `snapshots/${uuid}`;
     if (fs.existsSync(path.join(__dirname, `../../${filename}/backstop.json`))) {
         fs.readFile(path.join(__dirname, `../../${filename}/backstop.json`),(err, data) => {
             // config = JSON.parse(data);
@@ -28,6 +27,9 @@ const setConfig = (req) => {
     config.scenarios[0].clickSelector = req.body['scenario-clickSelector']
     config.scenarios[0].postInteractionWait = req.body['scenario-postInteractionWait']
     config.viewports = [];
+    config.asyncCaptureLimit = 2;
+    config.asyncCompareLimit = 10;
+
 
     for (let index in req.body.viewportLabel) {
         config.viewports.push({
@@ -48,36 +50,35 @@ const setConfig = (req) => {
         "ci_report": path.join(__dirname, `../../${filename}/backstop_data/ci_report`)
     };
     fs.existsSync(filename) || fs.mkdirSync(filename);
-
-    console.log('********** File exists? *********', fs.existsSync(path.join(__dirname, `../../${filename}/backstop.json`)));
-    
+    console.log(JSON.stringify(config));
     fs.writeFile(path.join(__dirname, `../../${filename}/backstop.json`), JSON.stringify(config), (err, res)=>{
         console.log('error', err, 'result', res);
     })
-    // console.log(config.viewports);
 }
 
-const backstopTest = (req) => {
-    setConfig(req);
-    backstop("test", {config: config}).then(result => {
-        /*
-
-        TODO: you need to send results to the database
-
-        */
-        console.log('*****TEST RESULT*****', result)
-    }).catch(error => {
-        /*
-
-        TODO: you need to send results to the database
-
-        */
-        console.log('****TEST ERROR****', error);
+const backstopTest = async (req, uuid) => {
+    setConfig(req, uuid);
+    await backstop("test", {config: config}).catch(err=>console.log(err));
+    fs.readdir(path.join(__dirname, `../../snapshots/${uuid}/backstop_data/bitmaps_test`), (err, files) => {
+        if (files) {
+            fs.readFile(path.join(__dirname, `../../snapshots/${uuid}/backstop_data/bitmaps_test/${files[0]}/report.json`),(err, data) => {
+                console.log('**** READFILE REPORT DATA ****', data.toString());
+                console.log('**** READFILE REPORT ERROR ****', err);
+                const jsonData = JSON.parse(data.toString());
+                for (let each of jsonData.tests) {
+                    const failed = each.status === 'fail';
+                    dbhandler.insert.report(files[0], failed, uuid)
+                    .then(result=>console.log('insert result', result))
+                    .catch(error=>console.log('insert error', error));
+                    
+                }
+            });
+        }
     });
 }
 
-const backstopReference = (req) => {
-    setConfig(req);
+const backstopReference = (req, uuid) => {
+    setConfig(req, uuid);
     backstop("reference", {config: config}).then((result)=> {
         console.log('*****REFERENCE RESULT******', result);
     });

@@ -101,8 +101,8 @@
       "--no-sandbox"
     ]
   },
-  "asyncCaptureLimit": 10,
-  "asyncCompareLimit": 100,
+  "asyncCaptureLimit": 2,
+  "asyncCompareLimit": 10,
   "debug": false,
   "debugWindow": false
 }

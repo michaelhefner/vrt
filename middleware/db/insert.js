@@ -21,8 +21,8 @@ module.exports = {
       pool
         .query(
           `
-          INSERT INTO urls (url, last_updated, created) 
-          VALUES ('${url}', '${date}', '${date}')
+          INSERT INTO urls (url, created) 
+          VALUES ('${url}', '${date}')
           `
         );
     } catch (error) {
@@ -42,6 +42,25 @@ module.exports = {
           `
           INSERT INTO tests (uuid, base_url_id, test_url_id, title, user_group, last_updated, created) 
           VALUES ('${uuid}','${baseUrl}', '${testUrl}', '${title}', '${user_group}', '${date}', '${date}')
+          `
+        );
+    } catch (error) {
+      return { message: error.detail, code: error.code, error: error };
+    }
+  },
+  report: async (uuid, failure, test_uuid) => {
+    try {
+      const date = (new Date).toLocaleString();
+      console.log(
+        `
+        INSERT INTO reports (uuid, failure, test_uuid) 
+        VALUES ('${uuid}','${failure}', '${test_uuid}', '${date}', '${date}')
+        `);
+      pool
+        .query(
+          `
+          INSERT INTO reports (uuid, failure, test_uuid, last_updated, created) 
+          VALUES ('${uuid}','${failure}', '${test_uuid}', '${date}', '${date}')
           `
         );
     } catch (error) {

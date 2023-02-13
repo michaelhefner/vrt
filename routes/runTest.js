@@ -36,8 +36,7 @@ const populateTest = async (req) => {
             await dbhandler.update.test(uuid, baseUrlId, testUrlId, title, userGroup);
         } else {
             uuid = uuidv4();
-        await dbhandler.insert.test(uuid, baseUrlId, testUrlId, title, userGroup);
-
+            await dbhandler.insert.test(uuid, baseUrlId, testUrlId, title, userGroup);
         }
     }
 
@@ -54,7 +53,7 @@ const populateTest = async (req) => {
     }
 
     if (baseUrlId !== -1 && testUrlId !== -1 && userGroup !== -1) {
-        insertTest().then(response => console.log('INSERT TEST RESPONSE', response))
+        await insertTest().then(response => console.log('INSERT TEST RESPONSE', response))
         .catch(error=>console.log('ERROR', error));
     }
     return uuid;
@@ -83,17 +82,12 @@ router.get("/:id", requiresAuth(), function (req, res, next) {
 });
 
 router.post("/test", requiresAuth(), (req, res, next) => {
-    backstop.backstopTest(req);
-    populateTest(req).then(uuid=>{
-        console.log('***** UUID ******', uuid );
-
-    })
+    populateTest(req).then(uuid=>backstop.backstopTest(req, uuid));
     res.redirect('/view-test');
 });
 
 router.post("/reference", requiresAuth(), (req, res, next) => {
-    backstop.backstopReference(req);
-    populateTest(req);
+    populateTest(req).then(uuid=>backstop.backstopReference(req, uuid));
     res.redirect('/view-test');
 });
 

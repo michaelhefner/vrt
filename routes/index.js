@@ -1,7 +1,6 @@
 var express = require("express");
 var router = express.Router();
 const { requiresAuth } = require("express-openid-connect");
-const backstop = require("../middleware/backstop/index.js");
 const config = require('../default.json');
 const fs = require('fs');
 const path = require('path');
@@ -78,25 +77,37 @@ router.get("/", function (req, res, next) {
 router.get("/view-test", requiresAuth(), (req, res, next) => {
     fs.readdir(path.join(__dirname, '../snapshots'), (err, files) => {
         if (files) {
-            const links = files.map((val) => {
-                const testReady = fs.existsSync(path.join(__dirname, `../snapshots/${val}/backstop_data/html_report`));
-                const referenceReady = fs.existsSync(path.join(__dirname, `../snapshots/${val}/backstop_data/bitmaps_reference`));
-                return { 
-                    href: `report/${val}`, 
-                    name: val, 
-                    allTests: `view-tests/reports/${val}`, 
-                    testReady: testReady, 
-                    referenceReady: referenceReady 
-                }
-            });
-            req.session.cookie.config = config;
-            res.render('view-test', {
-                title: "View Tests",
-                active: 'View Tests',
-                user: req.oidc.user,
-                body: req.body,
-                config: config,
-                links: links
+            const getLinks = async () => {
+                const links = [];
+                for (let val of files) {
+                    const testReady = fs.existsSync(path.join(__dirname, `../snapshots/${val}/backstop_data/html_report`));
+                    const referenceReady = fs.existsSync(path.join(__dirname, `../snapshots/${val}/backstop_data/bitmaps_reference`));
+                    await dbhandler.select.query('tests', '*', `WHERE uuid ='${val}'`).then(test => {
+                        console.log(test[0]);
+                        links.push( {
+                            href: `report/${val}`,
+                            name: test[0].title,
+                            allTests: `view-tests/reports/${val}`,
+                            testReady: testReady,
+                            test: test[0],
+                            referenceReady: referenceReady
+                        });
+                    })
+                };
+                return links;
+            }
+            getLinks().then(links => {
+                console.log('links', links);
+                req.session.cookie.config = config;
+                res.render('view-test', {
+                    title: "View Tests",
+                    active: 'View Tests',
+                    user: req.oidc.user,
+                    body: req.body,
+                    config: config,
+                    links: links
+                });
+
             });
         } else {
             res.render('view-test', {

@@ -11,16 +11,22 @@ block content
         .tests
             each link in links
                 section.view-pg-link.flex
-                    p.title= link.name.replaceAll('_', '/')
-                    if link.testReady && link.referenceReady
-                        a.green-bg.btn(href= link.href style='margin-left:1rem') View
-                        a.green-bg.btn(href= link.allTests style='margin-left:1rem') Report History
-                        a.blue-bg.btn(href='/run-test/'+link.name style='margin-left:1rem') New Test
-                    if !link.referenceReady
-                        a.btn.purple-bg(href= '/run-test/' + link.name, style='margin-left:1rem') Run Reference
-                    if !link.testReady 
-                        a.btn.blue-bg(href= '/run-test/' + link.name, style='margin-left:1rem') Run Test
-                    a.red-bg.btn(href='/delete/'+link.name style='margin-left:1rem') Delete
+                    .title.flex-2
+                        p= link.name
+                    .last-updated.flex-1
+                        small= 'Last Updated: ' 
+                            p= link.test.last_updated
+                    .action-items.flex-3
+                        if link.testReady && link.referenceReady
+                            a.grey-bg(href= link.href style='') View
+                            a.grey-bg(href= link.allTests style='') Report History
+                            a.blue-bg(href='/run-test/'+link.test.uuid style='') New Test
+                        if !link.referenceReady
+                            small(style='margin: auto; align-self: center; max-width: 200px; color: red;') A test may be running. Refresh page if you just ran a test.
+                            a.purple-bg(href= '/run-test/' + link.test.uuid, style='') Run Reference
+                        if !link.testReady 
+                            a.blue-bg(href= '/run-test/' + link.test.uuid, style='') Run Test
+                        a.red-bg(href='/delete/'+link.test.uuid style='') Delete
                     
 
     script. 
@@ -42,3 +48,7 @@ block content
                 itemContainer.appendChild(res)
             }
         });
+        const dateTime = document.querySelectorAll('small p');
+        for (let dtDisplay of dateTime) {
+            dtDisplay.innerText = (new Date(dtDisplay.innerText)).toLocaleString();
+        }

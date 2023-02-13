@@ -5,6 +5,7 @@ block content
         h3 Saved Reports
         each link in links
             section.view-pg-link.flex
-                p.title= link.name.replaceAll('_', '/')
-                a.green-bg.btn(href= link.href style='margin-left:1rem') View
-                a.red-bg.btn(href='/delete/'+link.name style='margin-left:1rem') Delete
+                p.title= link.name
+                .action-items
+                    a.green-bg(href= link.href style='') View
+                    a.red-bg(href='/delete/'+link.name style='') Delete
