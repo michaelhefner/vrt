@@ -161,6 +161,12 @@ form .urlinfo {
     display: block;
     text-align: center;
   }
+  .header2 {
+    width: 100%;
+  }
+  .menu2 {
+    flex-direction: column;
+  }
 }
 
 body {
@@ -344,10 +350,10 @@ nav.left-nav a:hover {
 
 .navbar2 {
   width: 100%;
+  max-width: 50vw;
   height: 100px;
   display: flex;
   align-items: center;
-  /* background-color: #8e54ff; */
 }
 
 .header2 {

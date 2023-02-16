@@ -1,36 +1,27 @@
-div(style="color: white; z-index: 5; position: fixed; width: 100%; display: flex; flex-direction: row; align-items:center; max-width: 100%; background-color: #0059A2;")
-    h2(style="margin: .5rem 3rem 0; white-space: nowrap; width: 15%;") VRT
-    div.navbar2
-        nav.header2
-            .menu2
-                                    
-                if active == 'Home'
+div.navbar2(style="color: white; z-index: 5; position: fixed; width: 100%; display: flex; align-items:center; max-width: 100%; background-color: #0059A2;")
+    nav.header2
+        .menu2
+            if active == 'Home'
+                li.active 
+                    a(href='/') Home
+            else 
+                li 
+                    a(href='/') Home
+            if user !== undefined
+                if active == 'New Test'
                     li.active 
-                        a(href='/') Home
+                        a(href='/run-test') New Test
                 else 
-                    li 
-                        a(href='/') Home
-                if user !== undefined
-                    if active == 'New Test'
-                        li.active 
-                            a(href='/run-test') New Test
-                    else 
-                        li
-                            a(href='/run-test') New Test
-                    if active == 'View Tests'
-                        li.active 
-                            a(href='/view-test') View Tests
-                    else 
-                        li
-                            a(href='/view-test') View Tests
                     li
-                        a(href='/logout') Logout
-                else
+                        a(href='/run-test') New Test
+                if active == 'View Tests'
+                    li.active 
+                        a(href='/view-test') View Tests
+                else 
                     li
-                        a(href='/login') Login
-    
-    if user
-        p(style="margin: .5rem 3rem 0 auto;  width: 15%;")  Hello&nbsp;
-            strong #{user.nickname}!
-    else
-        p(style="margin-left: 3rem;  width: 15%;") Welcome, ready to login?
+                        a(href='/view-test') View Tests
+                li
+                    a(href='/logout') Logout
+            else
+                li
+                    a(href='/login') Login

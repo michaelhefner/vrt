@@ -43,8 +43,24 @@ module.exports = {
         ON r.test_uuid = tests.uuid
         JOIN urls on tests.base_url_id = urls.id
         GROUP BY r.viewport 
-        ORDER BY avg DESC
-        LIMIT 5;
+        ORDER BY avg;
+    `
+      ).then(res=>res.rows);
+    } catch (error) {
+      return { message: error.detail, code: error.code, error: error };
+    }
+  },
+  avgAnalysisTime: async () => {
+    try {
+    return await pool.query(
+        `
+        SELECT r.viewport, avg(analysis_time) as "avg_analysis_time"
+        FROM tests 
+        JOIN (SELECT * FROM reports WHERE failure = TRUE) as r
+        ON r.test_uuid = tests.uuid
+        JOIN urls on tests.base_url_id = urls.id
+        GROUP BY r.viewport
+        ORDER BY avg_analysis_time;
     `
       ).then(res=>res.rows);
     } catch (error) {

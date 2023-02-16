@@ -2,34 +2,32 @@ extends layout
 
 block content
     if user
-        div(style="margin: 3rem auto; max-width: 70%")
-            h2 Ready To Run a New Test?
-            p.m-l-5 Click on 'Run Test' button in the main navigation.
-            
-        div(style="margin: 3rem auto; max-width: 70%")
-            h2 Or Look at an Existing Test?
-            p.m-l-5 Click on 'View Report Data' button in the main navigation.
-        canvas#avg-mismatch(style="width:100%;max-width:700px; max-height: 300px")
+        div(style="display: flex; flex-direction: row")
+            div(style="margin: 3rem auto; max-width: 70%")
+                h2 Ready To Run a New Test?
+                p.m-l-5 Click on 'New Test' button in the main navigation.
+                
+            div(style="margin: 3rem auto; max-width: 70%")
+                h2 Or Look at an Existing Test?
+                p.m-l-5 Click on 'View Test' in the main navigation.
+        canvas#avg-mismatch(style="width:100%;height: 100%; min-height: 400px;")
+        canvas#avg-analysis-time(style="width:100%;height: 100%; min-height: 400px;")
     script. 
-        
         const postData = async (url = '', data = {}) => {
-            // Default options are marked with *
             const response = await fetch(url, {
-                method: 'POST', // *GET, POST, PUT, DELETE, etc.
-                mode: 'cors', // no-cors, *cors, same-origin
-                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-                credentials: 'same-origin', // include, *same-origin, omit
+                method: 'POST', 
+                mode: 'cors',  
+                cache: 'no-cache',  
+                credentials: 'same-origin',  
                 headers: {
-                'Content-Type': 'application/json'
-                // 'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Type': 'application/json'
                 },
-                redirect: 'follow', // manual, *follow, error
-                referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-                body: JSON.stringify(data) // body data type must match "Content-Type" header
+                redirect: 'follow',  
+                referrerPolicy: 'no-referrer',  
+                body: JSON.stringify(data) 
             });
-            return response.json(); // parses JSON response into native JavaScript objects
+            return response.json();  
         }
-
         postData('/report/get-avg-mismatch')
         .then((data) => {
             const labels = data.map(d => `${d.viewport}`);
@@ -39,14 +37,11 @@ block content
             labels: labels,
             datasets: [{
                 axis: 'y',
+                label: 'Avg Mis-Match Percentage',
                 data: chartData,
                 fill: false,
-                backgroundColor: 
-                'rgba(255, 99, 132, 0.2)'
-                ,
-                borderColor: 
-                'rgb(255, 99, 132)'
-                ,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgb(255, 99, 132)',
                 borderWidth: 1
             }]
             };
@@ -54,28 +49,52 @@ block content
                 type: 'bar',
                 data: displayData,
                 options: {
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        title: {
-                            display: true,
-                            text: 'Top Failures',
-                            padding: {
-                                top: 10,
-                                bottom: 30
-                            }
-                        }
-                    },
                     scales: {
                         yAxes: [{
                             ticks: {
-                                fontSize: 24
+                                fontSize: 18
                             }
                         }],
                         xAxes: [{
                             ticks: {
-                                fontSize: 24
+                                fontSize: 18
+                            }
+                        }]
+                    }
+                }
+            });
+        });
+        
+        postData('/report/get-avg-analysis')
+        .then((data) => {
+            const labels = data.map(d => `${d.viewport}`);
+            const chartData = data.map(cd => cd.avg_analysis_time);
+            const ctx = document.getElementById('avg-analysis-time');
+            const displayData = {
+            labels: labels,
+            datasets: [{
+                axis: 'y',
+                label: 'Avg Analysis Time',
+                data: chartData,
+                fill: false,
+                backgroundColor: 'rgba(65, 105, 225, 0.2)',
+                borderColor: 'rgba(65, 105, 225, 1)',
+                borderWidth: 1
+            }]
+            };
+            new Chart(ctx, {
+                type: 'bar',
+                data: displayData,
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                fontSize: 18
+                            }
+                        }],
+                        xAxes: [{
+                            ticks: {
+                                fontSize: 18
                             }
                         }]
                     }

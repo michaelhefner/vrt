@@ -61,7 +61,15 @@ module.exports = {
         .query(
           `
           INSERT INTO reports (uuid, failure, title, mis_match_percent, viewport, analysis_time, test_uuid, last_updated, created) 
-          VALUES ('${uuid}','${failure}','${title}',${mis_match_percent},'${viewport}','${analysis_time}', '${test_uuid}', '${date}', '${date}')
+          VALUES ('${uuid}',
+          '${failure}',
+          '${title}',
+          ${mis_match_percent},
+          '${viewport}',
+          '${analysis_time || 0}', 
+          '${test_uuid}', 
+          '${date}', 
+          '${date}')
           `
         );
     } catch (error) {

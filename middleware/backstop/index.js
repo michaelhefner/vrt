@@ -6,12 +6,7 @@ let config = {...defaultConfig};
 const dbhandler = require('../db/handler');
 const setConfig = (req, uuid) => {
     const filename = `snapshots/${uuid}`;
-    if (fs.existsSync(path.join(__dirname, `../../${filename}/backstop.json`))) {
-        fs.readFile(path.join(__dirname, `../../${filename}/backstop.json`),(err, data) => {
-            // config = JSON.parse(data);
-            console.log('**** READFILE ****', JSON.parse(data));
-        })
-    }
+    
     config.id = req.body.id;
     config.scenarios[0].label = req.body.id;
     config.scenarios[0].referenceUrl = req.body.referenceUrl
@@ -30,7 +25,6 @@ const setConfig = (req, uuid) => {
     config.asyncCaptureLimit = 2;
     config.asyncCompareLimit = 10;
 
-
     for (let index in req.body.viewportLabel) {
         config.viewports.push({
             label: req.body.viewportLabel[index], 
@@ -38,10 +32,7 @@ const setConfig = (req, uuid) => {
             height: parseInt(req.body.viewportHeight[index])
         })
     }
-    // console.log(req.body.viewportLabel);
-    // console.log('Viewport Config Labels', config.scenarios[0].viewportLabel);
-    // fs.rmSync(path.join(__dirname, `../../${filename}`), { recursive: true, force: true });
-
+    
     config.paths = {
         "bitmaps_reference": path.join(__dirname, `../../${filename}/backstop_data/bitmaps_reference`),
         "bitmaps_test": path.join(__dirname, `../../${filename}/backstop_data/bitmaps_test`),

@@ -147,5 +147,14 @@ router.post("/report/get-avg-mismatch", (req, res, next) => {
         res.json(result);
     })
 })
+router.post("/report/get-avg-analysis", (req, res, next) => {
+    const getDataView = async () => {
+        return await dbhandler.select.avgAnalysisTime();
+    }
+    getDataView().then(result=> {
+        console.log(result);
+        res.json(result);
+    })
+})
 
 module.exports = router;
