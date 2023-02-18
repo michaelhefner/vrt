@@ -11,8 +11,4 @@ router.get("/profile", requiresAuth(), (req, res, next) => {
   res.render("profile", { title: "User", user: req.oidc.user });
 });
 
-router.post("/add", (req, res, next) => {
-  insert.user(req.body.username, req.body.email);
-  return res.send(select.user(req.body.username));
-});
 module.exports = router;

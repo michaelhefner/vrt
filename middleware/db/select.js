@@ -1,9 +1,11 @@
 const { pool } = require("./connect.js");
 
 module.exports = {
+  /*
+  Build out select statement
+  */
   query: async (tableName, columns, whereClause) => {
     try {
-      console.log(`*************** SELECT ${columns} FROM ${tableName} ${whereClause};`);
     return await pool.query(
         `SELECT ${columns} FROM ${tableName} ${whereClause};`
       ).then(res=>res.rows);
@@ -11,6 +13,10 @@ module.exports = {
       return { message: error.detail, code: error.code, error: error };
     }
   },
+  
+  /*
+  Build out table joins for full report
+  */
   joinedTables: async () => {
     try {
     return await pool.query(
@@ -33,6 +39,10 @@ module.exports = {
       return { message: error.detail, code: error.code, error: error };
     }
   },
+  
+  /*
+  Build out report for the average mis match
+  */
   avgMisMatch: async () => {
     try {
     return await pool.query(
@@ -50,6 +60,10 @@ module.exports = {
       return { message: error.detail, code: error.code, error: error };
     }
   },
+
+  /*
+  Build out report for the average analysis time
+  */
   avgAnalysisTime: async () => {
     try {
     return await pool.query(

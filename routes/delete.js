@@ -8,7 +8,9 @@ const path = require('path');
 const dbhandler = require('../middleware/db/handler');
 const { v4: uuidv4 } = require('uuid');
 
-
+/*
+Delete endpoint using the test id 
+*/
 router.get("/:id", requiresAuth(), (req, res, next) => {
     const parentDir = req.params.id.replaceAll('/', '_');
     if (fs.existsSync(path.join(__dirname, `../snapshots/${parentDir}`))) {
@@ -17,15 +19,15 @@ router.get("/:id", requiresAuth(), (req, res, next) => {
             console.log('*** RESULTS ***', results);
             if (results.length > 0) {
                 for (let each of results) {
-                dbhandler.qDelete('tests', `WHERE test_url_id = ${each.id}`)
-                    .then(response => { console.log('URL RESPONSE', response); return response; })
-                    .then(response => {
-                        if (response && response !== undefined && response[0]) {
-                            return response;
-                        } else {
-                            return -1;
-                        }
-                    });
+                    dbhandler.qDelete('tests', `WHERE test_url_id = ${each.id}`)
+                        .then(response => { console.log('URL RESPONSE', response); return response; })
+                        .then(response => {
+                            if (response && response !== undefined && response[0]) {
+                                return response;
+                            } else {
+                                return -1;
+                            }
+                        });
                 }
             } else {
                 console.log('** No rows found in the database **');

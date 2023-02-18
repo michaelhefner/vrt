@@ -8,49 +8,8 @@ const dbhandler = require('../middleware/db/handler');
 const { v4: uuidv4 } = require('uuid');
 
 /*
-Function to save test information to the database
+Home route get current user, if the user is a first time login then add them to the database
 */
-const populateTest = async (req) => {
-    let baseUrlId = '';
-    let testUrlId = '';
-    let userGroup = '';
-    const title = req.body.id;
-    const getuserGroup = async () => {
-        return await dbhandler.select.query('users', 'user_group', `WHERE uuid='${req.oidc.user.sub}'`)
-            .then(response => { console.log('USER GOUP RESPONSE', response); return response; })
-            .then(response => response && response !== undefined && response[0] ? response[0].user_group : -1)
-    }
-    const getUrlMatch = async (url) => {
-        return await dbhandler.select.query('urls', 'id', `WHERE url='${url}'`)
-            .then(response => { console.log('SELECT URL RESPONSE', response); return response; })
-            .then(response => response && response !== undefined && response[0] ? response[0].id : -1)
-    };
-    const insertUrl = async (url) => {
-        await dbhandler.insert.url(url);
-        return getUrlMatch(url);
-    };
-    const insertTest = async () => {
-        dbhandler.insert.test(baseUrlId, testUrlId, title, userGroup);
-    }
-
-    userGroup = await getuserGroup();
-
-    baseUrlId = await getUrlMatch(req.body.referenceUrl);
-    if (baseUrlId === -1) {
-        baseUrlId = await insertUrl(req.body.referenceUrl)
-    }
-
-    testUrlId = await getUrlMatch(req.body.testUrl);
-    if (testUrlId === -1) {
-        testUrlId = await insertUrl(req.body.testUrl)
-    }
-
-    if (baseUrlId !== -1 && testUrlId !== -1 && userGroup !== -1) {
-        insertTest().then(response => console.log('INSERT TEST RESPONSE', response));
-    }
-
-}
-
 router.get("/", function (req, res, next) {
     const user = req.oidc.user;
     if (user !== null && user !== undefined) {
@@ -76,6 +35,9 @@ router.get("/", function (req, res, next) {
 
 });
 
+/*
+Route for test list 
+*/
 router.get("/view-test", requiresAuth(), (req, res, next) => {
     fs.readdir(path.join(__dirname, '../snapshots'), (err, files) => {
         if (files) {
@@ -123,10 +85,17 @@ router.get("/view-test", requiresAuth(), (req, res, next) => {
     })
 });
 
+
+/*
+Redirect report from id
+*/
 router.get('/report/:id', requiresAuth(), (req, res, next) => {
     res.redirect(`/report/${req.params.id}/backstop_data/html_report/test-index`)
 })
 
+/*
+Grab static files to display the test
+*/
 router.get("/report/*/backstop_data/html_report/test-index", requiresAuth(), function (req, res, next) {
     const param = req.url.slice(req.url.indexOf('?') + 1);
     const folder = req.url.replace('/report', 'snapshots').replace('test-index', 'index.html').replace(`?${param}`, '');
@@ -138,6 +107,9 @@ router.get("/report/*/backstop_data/html_report/test-index", requiresAuth(), fun
     });
 });
 
+/*
+Call the average mis match function and return the results
+*/
 router.post("/report/get-avg-mismatch", (req, res, next) => {
     const getDataView = async () => {
         return await dbhandler.select.avgMisMatch();
@@ -145,8 +117,12 @@ router.post("/report/get-avg-mismatch", (req, res, next) => {
     getDataView().then(result=> {
         console.log(result);
         res.json(result);
-    })
-})
+    });
+});
+
+/*
+Call the average analysis time function and return the results
+*/
 router.post("/report/get-avg-analysis", (req, res, next) => {
     const getDataView = async () => {
         return await dbhandler.select.avgAnalysisTime();
@@ -154,7 +130,7 @@ router.post("/report/get-avg-analysis", (req, res, next) => {
     getDataView().then(result=> {
         console.log(result);
         res.json(result);
-    })
-})
+    });
+});
 
 module.exports = router;

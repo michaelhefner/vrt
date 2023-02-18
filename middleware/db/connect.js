@@ -6,10 +6,16 @@ const pool = new Pool({
   port: process.env.db_port,
   host: process.env.db_host,
 });
+
+
+/*
+Create needed tables in case tables don't exist
+*/
 pool.query(
   `
       CREATE TABLE IF NOT EXISTS
-        Users (id serial primary key,
+        users (
+          id serial primary key,
           username varchar(255) NOT NULL, 
           email varchar(255) NOT NULL, 
           uuid varchar(255) NOT NULL,
@@ -19,13 +25,14 @@ pool.query(
           unique(username, email, uuid)
           );
       CREATE TABLE IF NOT EXISTS
-        URLS (id serial primary key,
+        urls (
+          id serial primary key,
           url varchar(255) NOT NULL,
           created timestamp NOT NULL,
           unique(url)
           );
       CREATE TABLE IF NOT EXISTS
-        Tests (
+        tests (
           uuid varchar(64) primary key,
           base_url_id integer NOT NULL, 
           test_url_id integer NOT NULL, 
