@@ -1,10 +1,11 @@
-const { pool } = require("./connect.js");
+const { pool } = require("./Connection.js");
 
-module.exports = {
+class Update {
+  constructor(){}
   /*
   Build out update statement
   */
-  user: async (username, email, uuid, user_group) => {
+  async user(username, email, uuid, user_group) {
     try {
       pool
         .query(
@@ -18,11 +19,11 @@ module.exports = {
     } catch (error) {
       return { message: error.detail, code: error.code, error: error };
     }
-  },
+  }
   /*
   Build out update statement
   */
-  test: async (uuid, baseUrl, testUrl, title, user_group) => {
+  async test(uuid, baseUrl, testUrl, title, user_group) {
     try {
       pool
         .query(
@@ -38,5 +39,7 @@ module.exports = {
     } catch (error) {
       return { message: error.detail, code: error.code, error: error };
     }
-  },
+  }
 };
+
+module.exports = new Update();

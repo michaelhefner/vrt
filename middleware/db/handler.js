@@ -1,6 +1,6 @@
-const select = require("./select");
-const insert = require("./insert");
-const update = require("./update");
-const qDelete = require("./delete");
+const select = require("./Select");
+const insert = require("./Insert");
+const update = require("./Update");
+const qDelete = require("./Delete");
 
 module.exports = { select, insert, qDelete, update };

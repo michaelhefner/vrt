@@ -1,11 +1,14 @@
-const { pool } = require("./connect.js");
+const { pool } = require("./Connection.js");
 
-module.exports = {
+class Insert {
+  constructor() {
+
+  }
   
   /*
   Build out insert statement
   */
-  user: async (username, email, uuid, user_group) => {
+  async user(username, email, uuid, user_group) {
     try {
       const date = (new Date).toLocaleString();
       pool
@@ -18,12 +21,12 @@ module.exports = {
     } catch (error) {
       return { message: error.detail, code: error.code, error: error };
     }
-  },
+  }
   
   /*
   Build out insert statement
   */
-  url: async (url) => {
+  async url(url){
     try {
       const date = (new Date).toLocaleString();
       pool
@@ -36,12 +39,12 @@ module.exports = {
     } catch (error) {
       return { message: error.detail, code: error.code, error: error };
     }
-  },
+  }
   
   /*
   Build out insert statement
   */
-  test: async (uuid, baseUrl, testUrl, title, user_group) => {
+  async test(uuid, baseUrl, testUrl, title, user_group) {
     try {
       const date = (new Date).toLocaleString();
       pool
@@ -54,11 +57,11 @@ module.exports = {
     } catch (error) {
       return { message: error.detail, code: error.code, error: error };
     }
-  },
+  }
   /*
   Build out insert statement
   */
-  report: async (uuid, failure, title, mis_match_percent, viewport, analysis_time, test_uuid) => {
+  async report(uuid, failure, title, mis_match_percent, viewport, analysis_time, test_uuid) {
     try {
       const date = (new Date).toLocaleString();
       pool
@@ -79,5 +82,7 @@ module.exports = {
     } catch (error) {
       return { message: error.detail, code: error.code, error: error };
     }
-  },
+  }
 };
+
+module.exports = new Insert();

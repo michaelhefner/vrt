@@ -23,7 +23,7 @@ router.get("/", function (req, res, next) {
                     .then(response => console.log(response));
             }
         });
-        
+
         res.render("index", {
             title: "Regression Testing",
             active: 'Home',
@@ -47,8 +47,7 @@ router.get("/view-test", requiresAuth(), (req, res, next) => {
                     const testReady = fs.existsSync(path.join(__dirname, `../snapshots/${val}/backstop_data/html_report`));
                     const referenceReady = fs.existsSync(path.join(__dirname, `../snapshots/${val}/backstop_data/bitmaps_reference`));
                     await dbhandler.select.query('tests', '*', `WHERE uuid ='${val}'`).then(test => {
-                        console.log(test[0]);
-                        links.push( {
+                        links.push({
                             href: `report/${val}`,
                             name: test[0].title,
                             allTests: `view-tests/reports/${val}`,
@@ -114,7 +113,7 @@ router.post("/report/get-avg-mismatch", (req, res, next) => {
     const getDataView = async () => {
         return await dbhandler.select.avgMisMatch();
     }
-    getDataView().then(result=> {
+    getDataView().then(result => {
         console.log(result);
         res.json(result);
     });
@@ -127,7 +126,7 @@ router.post("/report/get-avg-analysis", (req, res, next) => {
     const getDataView = async () => {
         return await dbhandler.select.avgAnalysisTime();
     }
-    getDataView().then(result=> {
+    getDataView().then(result => {
         console.log(result);
         res.json(result);
     });

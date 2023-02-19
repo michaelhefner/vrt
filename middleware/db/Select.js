@@ -1,10 +1,11 @@
-const { pool } = require("./connect.js");
+const { pool } = require("./Connection.js");
 
-module.exports = {
+class Select {
+  constructor(){}
   /*
   Build out select statement
   */
-  query: async (tableName, columns, whereClause) => {
+  async query(tableName, columns, whereClause) {
     try {
     return await pool.query(
         `SELECT ${columns} FROM ${tableName} ${whereClause};`
@@ -12,12 +13,12 @@ module.exports = {
     } catch (error) {
       return { message: error.detail, code: error.code, error: error };
     }
-  },
+  }
   
   /*
   Build out table joins for full report
   */
-  joinedTables: async () => {
+  async joinedTables() {
     try {
     return await pool.query(
         `
@@ -38,12 +39,12 @@ module.exports = {
     } catch (error) {
       return { message: error.detail, code: error.code, error: error };
     }
-  },
+  }
   
   /*
   Build out report for the average mis match
   */
-  avgMisMatch: async () => {
+  async avgMisMatch() {
     try {
     return await pool.query(
         `
@@ -59,12 +60,12 @@ module.exports = {
     } catch (error) {
       return { message: error.detail, code: error.code, error: error };
     }
-  },
+  }
 
   /*
   Build out report for the average analysis time
   */
-  avgAnalysisTime: async () => {
+  async avgAnalysisTime() {
     try {
     return await pool.query(
         `
@@ -82,3 +83,5 @@ module.exports = {
     }
   }
 };
+
+module.exports = new Select();
