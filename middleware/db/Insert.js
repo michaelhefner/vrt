@@ -1,9 +1,7 @@
 const { pool } = require("./Connection.js");
 
 class Insert {
-  constructor() {
-
-  }
+  constructor() {  }
   
   /*
   Build out insert statement
@@ -11,7 +9,7 @@ class Insert {
   async user(username, email, uuid, user_group) {
     try {
       const date = (new Date).toLocaleString();
-      pool
+      return await pool
         .query(
           `
           INSERT INTO users (username, email, uuid, user_group, last_updated, created) 
@@ -29,7 +27,7 @@ class Insert {
   async url(url){
     try {
       const date = (new Date).toLocaleString();
-      pool
+      return await pool
         .query(
           `
           INSERT INTO urls (url, created) 
@@ -47,7 +45,7 @@ class Insert {
   async test(uuid, baseUrl, testUrl, title, user_group) {
     try {
       const date = (new Date).toLocaleString();
-      pool
+      return await pool
         .query(
           `
           INSERT INTO tests (uuid, base_url_id, test_url_id, title, user_group, last_updated, created) 
@@ -64,7 +62,7 @@ class Insert {
   async report(uuid, failure, title, mis_match_percent, viewport, analysis_time, test_uuid) {
     try {
       const date = (new Date).toLocaleString();
-      pool
+      return await pool
         .query(
           `
           INSERT INTO reports (uuid, failure, title, mis_match_percent, viewport, analysis_time, test_uuid, last_updated, created) 

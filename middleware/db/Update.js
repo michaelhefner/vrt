@@ -7,7 +7,7 @@ class Update {
   */
   async user(username, email, uuid, user_group) {
     try {
-      pool
+      return await pool
         .query(
           `
           UPDATE users 
@@ -25,7 +25,7 @@ class Update {
   */
   async test(uuid, baseUrl, testUrl, title, user_group) {
     try {
-      pool
+      return await pool
         .query(
             `
             UPDATE tests 
