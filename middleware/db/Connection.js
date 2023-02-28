@@ -6,6 +6,9 @@ const password =  process.env.db_pw;
 const port = process.env.db_port;
 const host = process.env.db_host;
 
+/*
+Initial connection to the database. Use environment variables for connection
+*/
 class Connection extends Pool {
     constructor(user, database, password, port, host) {
         super({
