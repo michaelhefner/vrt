@@ -31,7 +31,9 @@ const populateTest = async (req) => {
     };
     const insertTest = async () => {
         const testMatch = await dbhandler.select.query('tests', '*', `WHERE user_group='${userGroup}' and test_url_id=${testUrlId}`);
-        if (testMatch.length > 0) {
+        if (req.body.uuid){
+            uuid = req.body.uuid;
+        } else if (testMatch.length > 0) {
             uuid = testMatch[0].uuid;
             await dbhandler.update.test(uuid, baseUrlId, testUrlId, title, userGroup);
         } else {
@@ -60,7 +62,6 @@ const populateTest = async (req) => {
 }
 
 router.get("/", requiresAuth(), function (req, res, next) {
-    // console.log('********************************* CONFIG ******************************', config);
     res.render("run-test", {
         title: "New Test",
         active: 'New Test',
@@ -77,7 +78,8 @@ router.get("/:id", requiresAuth(), function (req, res, next) {
         active: 'New Test',
         user: req.oidc.user,
         body: req.body,
-        config: editConfig
+        config: editConfig,
+        uuid: req.params.id
     });
 });
 
