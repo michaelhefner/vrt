@@ -2,6 +2,8 @@
 
 * {
   font-family: 'Roboto', sans-serif;
+}
+body {
   padding: 0;
   margin: 0;
 }
@@ -445,4 +447,9 @@ input.valid {
 input.invalid {
   border: solid 1px #9008;
   background: #9002;
+}
+canvas {
+  box-shadow: 0 5px 10px #0003;
+  padding: 1rem;
+  max-width: 95%;
 }

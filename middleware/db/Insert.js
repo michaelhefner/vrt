@@ -1,10 +1,15 @@
-const { pool } = require("./connect.js");
+const { pool } = require("./Connection.js");
 
-module.exports = {
-  user: async (username, email, uuid, user_group) => {
+class Insert {
+  constructor() {  }
+  
+  /*
+  Build out insert statement
+  */
+  async user(username, email, uuid, user_group) {
     try {
       const date = (new Date).toLocaleString();
-      pool
+      return await pool
         .query(
           `
           INSERT INTO users (username, email, uuid, user_group, last_updated, created) 
@@ -14,11 +19,15 @@ module.exports = {
     } catch (error) {
       return { message: error.detail, code: error.code, error: error };
     }
-  },
-  url: async (url) => {
+  }
+  
+  /*
+  Build out insert statement
+  */
+  async url(url){
     try {
       const date = (new Date).toLocaleString();
-      pool
+      return await pool
         .query(
           `
           INSERT INTO urls (url, created) 
@@ -28,16 +37,15 @@ module.exports = {
     } catch (error) {
       return { message: error.detail, code: error.code, error: error };
     }
-  },
-  test: async (uuid, baseUrl, testUrl, title, user_group) => {
+  }
+  
+  /*
+  Build out insert statement
+  */
+  async test(uuid, baseUrl, testUrl, title, user_group) {
     try {
       const date = (new Date).toLocaleString();
-      console.log(
-        `
-        INSERT INTO tests (uuid, base_url_id, test_url_id, title, user_group) 
-        VALUES ('${uuid}','${baseUrl}', '${testUrl}', '${title}', '${user_group}')
-        `);
-      pool
+      return await pool
         .query(
           `
           INSERT INTO tests (uuid, base_url_id, test_url_id, title, user_group, last_updated, created) 
@@ -47,17 +55,14 @@ module.exports = {
     } catch (error) {
       return { message: error.detail, code: error.code, error: error };
     }
-  },
-  report: async (uuid, failure, title, mis_match_percent, viewport, analysis_time, test_uuid) => {
+  }
+  /*
+  Build out insert statement
+  */
+  async report(uuid, failure, title, mis_match_percent, viewport, analysis_time, test_uuid) {
     try {
       const date = (new Date).toLocaleString();
-      console.log(
-        `
-        INSERT INTO reports (uuid, failure, title, mis_match_percent, viewport, analysis_time, test_uuid, last_updated, created) 
-        VALUES ('${uuid}','${failure}','${title}','${mis_match_percent}','${viewport}','${analysis_time}', '${test_uuid}', '${date}', '${date}')
-        `
-        );
-      pool
+      return await pool
         .query(
           `
           INSERT INTO reports (uuid, failure, title, mis_match_percent, viewport, analysis_time, test_uuid, last_updated, created) 
@@ -75,5 +80,7 @@ module.exports = {
     } catch (error) {
       return { message: error.detail, code: error.code, error: error };
     }
-  },
+  }
 };
+
+module.exports = new Insert();

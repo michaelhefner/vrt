@@ -8,16 +8,17 @@ const path = require('path');
 const dbhandler = require('../middleware/db/handler');
 const { v4: uuidv4 } = require('uuid');
 
-
+/*
+Delete endpoint using the test id 
+*/
 router.get("/:id", requiresAuth(), (req, res, next) => {
-    const parentDir = req.params.id.replaceAll('/', '_');
+    const parentDir = req.params.id;
     if (fs.existsSync(path.join(__dirname, `../snapshots/${parentDir}`))) {
-        const rows = dbhandler.select.query('urls', '*', `WHERE url = '${req.params.id.replaceAll('_', '/')}'`);
-        rows.then((results) => {
-            console.log('*** RESULTS ***', results);
-            if (results.length > 0) {
-                for (let each of results) {
-                dbhandler.qDelete('tests', `WHERE test_url_id = ${each.id}`)
+
+        dbhandler.qDelete.row('reports', `WHERE test_uuid = '${parentDir}'`)
+            .then(response => { console.log('URL RESPONSE', response); return response; })
+            .then(() => {
+                dbhandler.qDelete.row('tests', `WHERE uuid = '${parentDir}'`)
                     .then(response => { console.log('URL RESPONSE', response); return response; })
                     .then(response => {
                         if (response && response !== undefined && response[0]) {
@@ -26,16 +27,12 @@ router.get("/:id", requiresAuth(), (req, res, next) => {
                             return -1;
                         }
                     });
-                }
-            } else {
-                console.log('** No rows found in the database **');
-            }
-        });
+            });
         fs.rmSync(path.join(__dirname, `../snapshots/${parentDir}`), { recursive: true, force: true });
 
         res.redirect('/view-test');
     } else {
-        next({ message: "sorry this test was not found" });
+        next({ message: "Sorry, this test was not found" });
     }
 });
 module.exports = router;

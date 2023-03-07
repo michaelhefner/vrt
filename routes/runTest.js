@@ -61,6 +61,9 @@ const populateTest = async (req) => {
     return uuid;
 }
 
+/*
+Get the New Test page
+*/
 router.get("/", requiresAuth(), function (req, res, next) {
     res.render("run-test", {
         title: "New Test",
@@ -71,6 +74,9 @@ router.get("/", requiresAuth(), function (req, res, next) {
     });
 });
 
+/*
+Get the New Test page and populate it with saved configuration file
+*/
 router.get("/:id", requiresAuth(), function (req, res, next) {
     const editConfig = require(`../snapshots/${req.params.id}/backstop.json`)
     res.render("run-test", {
@@ -83,11 +89,17 @@ router.get("/:id", requiresAuth(), function (req, res, next) {
     });
 });
 
+/*
+Execute test
+*/
 router.post("/test", requiresAuth(), (req, res, next) => {
     populateTest(req).then(uuid=>backstop.backstopTest(req, uuid));
     res.redirect('/view-test');
 });
 
+/*
+Execute reference
+*/
 router.post("/reference", requiresAuth(), (req, res, next) => {
     populateTest(req).then(uuid=>backstop.backstopReference(req, uuid));
     res.redirect('/view-test');

@@ -1,9 +1,13 @@
-const { pool } = require("./connect.js");
+const { pool } = require("./Connection.js");
 
-module.exports = {
-  user: async (username, email, uuid, user_group) => {
+class Update {
+  constructor(){}
+  /*
+  Build out update statement
+  */
+  async user(username, email, uuid, user_group) {
     try {
-      pool
+      return await pool
         .query(
           `
           UPDATE users 
@@ -15,20 +19,13 @@ module.exports = {
     } catch (error) {
       return { message: error.detail, code: error.code, error: error };
     }
-  },
-  
-  test: async (uuid, baseUrl, testUrl, title, user_group) => {
+  }
+  /*
+  Build out update statement
+  */
+  async test(uuid, baseUrl, testUrl, title, user_group) {
     try {
-        
-      console.log(
-        `
-        UPDATE tests WHERE uuid = '${uuid}' 
-        SET base_url_id = '${baseUrl}', test_url_id = '${testUrl}', 
-        title = '${title}', user_group = '${user_group}', 
-        last_updated = '${(new Date).toLocaleString()}'
-        `
-        );
-      pool
+      return await pool
         .query(
             `
             UPDATE tests 
@@ -42,5 +39,7 @@ module.exports = {
     } catch (error) {
       return { message: error.detail, code: error.code, error: error };
     }
-  },
+  }
 };
+
+module.exports = new Update();

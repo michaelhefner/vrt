@@ -7,7 +7,6 @@ require('dotenv').config()
 var session = require('express-session');
 const { requiresAuth } = require("express-openid-connect");
 
-const pool = require('./middleware/db/connect')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var deleteRouter = require('./routes/delete');

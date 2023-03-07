@@ -4,6 +4,9 @@ const fs = require('fs');
 const path = require('path');
 let config = {...defaultConfig};
 const dbhandler = require('../db/handler');
+/*
+Set Backstop config
+*/
 const setConfig = (req, uuid) => {
     const filename = `snapshots/${uuid}`;
     
@@ -46,15 +49,15 @@ const setConfig = (req, uuid) => {
         console.log('error', err, 'result', res);
     })
 }
-
+/*
+Backstop test function
+*/
 const backstopTest = async (req, uuid) => {
     setConfig(req, uuid);
     await backstop("test", {config: config}).catch(err=>console.log(err));
     fs.readdir(path.join(__dirname, `../../snapshots/${uuid}/backstop_data/bitmaps_test`), (err, files) => {
         if (files) {
             fs.readFile(path.join(__dirname, `../../snapshots/${uuid}/backstop_data/bitmaps_test/${files[0]}/report.json`),(err, data) => {
-                console.log('**** READFILE REPORT DATA ****', data.toString());
-                console.log('**** READFILE REPORT ERROR ****', err);
                 const jsonData = JSON.parse(data.toString());
                 for (let each of jsonData.tests) {
                     const failed = each.status === 'fail';
@@ -66,11 +69,17 @@ const backstopTest = async (req, uuid) => {
         }
     });
 }
-
+/*
+Backstop Reference function
+*/
 const backstopReference = (req, uuid) => {
     setConfig(req, uuid);
-    backstop("reference", {config: config}).then((result)=> {
+    backstop("reference", {config: config})
+    .then((result)=> {
         console.log('*****REFERENCE RESULT******', result);
+    })
+    .catch((error) => {
+        console.log("Sorry, there was a reference error: ", error);
     });
 }
 

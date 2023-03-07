@@ -1,17 +1,24 @@
-const { pool } = require("./connect.js");
+const { pool } = require("./Connection.js");
 
-module.exports = {
-  query: async (tableName, columns, whereClause) => {
+class Select {
+  constructor(){}
+  /*
+  Build out select statement
+  */
+  async query(tableName, columns, whereClause) {
     try {
-      console.log(`*************** SELECT ${columns} FROM ${tableName} ${whereClause};`);
     return await pool.query(
         `SELECT ${columns} FROM ${tableName} ${whereClause};`
       ).then(res=>res.rows);
     } catch (error) {
       return { message: error.detail, code: error.code, error: error };
     }
-  },
-  joinedTables: async () => {
+  }
+  
+  /*
+  Build out table joins for full report
+  */
+  async joinedTables() {
     try {
     return await pool.query(
         `
@@ -32,8 +39,12 @@ module.exports = {
     } catch (error) {
       return { message: error.detail, code: error.code, error: error };
     }
-  },
-  avgMisMatch: async () => {
+  }
+  
+  /*
+  Build out report for the average mis match
+  */
+  async avgMisMatch() {
     try {
     return await pool.query(
         `
@@ -49,8 +60,12 @@ module.exports = {
     } catch (error) {
       return { message: error.detail, code: error.code, error: error };
     }
-  },
-  avgAnalysisTime: async () => {
+  }
+
+  /*
+  Build out report for the average analysis time
+  */
+  async avgAnalysisTime() {
     try {
     return await pool.query(
         `
@@ -68,3 +83,5 @@ module.exports = {
     }
   }
 };
+
+module.exports = new Select();
